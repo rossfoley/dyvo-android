@@ -14,4 +14,7 @@
     <string name="title_activity_facebook_login">FacebookLoginActivity</string>
 
     <string name="hello_world">Hello world!</string>
+
+    <string name="app_id">684226168353798</string>
+    <string name="facebook_app_name">Dyvo</string>
 </resources>

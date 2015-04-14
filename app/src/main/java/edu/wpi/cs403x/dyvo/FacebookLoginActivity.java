@@ -11,8 +11,11 @@ import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
+import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+
+import java.util.Arrays;
 
 
 public class FacebookLoginActivity extends ActionBarActivity {
@@ -21,12 +24,12 @@ public class FacebookLoginActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         FacebookSdk.sdkInitialize(getApplicationContext());
-        setContentView(R.layout.activity_facebook_login);
-
-        // Initialize the Facebook login button
         callbackManager = CallbackManager.Factory.create();
+
+        // Initialize the view and login button
+        setContentView(R.layout.activity_facebook_login);
         LoginButton loginButton = (LoginButton) findViewById(R.id.login_button);
-        loginButton.setReadPermissions("public_profile,user_friends");
+        loginButton.setReadPermissions(Arrays.asList("public_profile","user_friends"));
 
         // Callback registration
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
@@ -46,6 +49,8 @@ public class FacebookLoginActivity extends ActionBarActivity {
                 // App code
             }
         });
+
+
     }
 
     @Override
