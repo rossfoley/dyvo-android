@@ -50,7 +50,10 @@ public class FacebookLoginActivity extends ActionBarActivity {
             }
         });
 
-
+        if (AccessToken.getCurrentAccessToken() != null) {
+            // The user is already logged in
+            startActivity(new Intent(FacebookLoginActivity.this, MainActivity.class));
+        }
     }
 
     @Override
