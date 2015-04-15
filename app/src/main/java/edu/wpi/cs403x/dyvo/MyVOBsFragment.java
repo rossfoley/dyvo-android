@@ -8,11 +8,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.facebook.AccessToken;
 import com.facebook.Profile;
 import com.facebook.ProfileTracker;
 import com.facebook.login.widget.ProfilePictureView;
+import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.getbase.floatingactionbutton.FloatingActionsMenu;
 
 
 public class MyVOBsFragment extends Fragment {
@@ -22,6 +24,10 @@ public class MyVOBsFragment extends Fragment {
 
     private ProfilePictureView profilePictureView;
     private TextView name;
+    private FloatingActionsMenu actionMenu;
+    private FloatingActionButton addTextVOBButton;
+    private FloatingActionButton addPictureVOBButton;
+
     private ProfileTracker profileTracker;
 
     public static MyVOBsFragment newInstance(int sectionNumber) {
@@ -49,9 +55,28 @@ public class MyVOBsFragment extends Fragment {
         // Initialize Facebook data
         Profile.fetchProfileForCurrentAccessToken();
 
-        // Update the UI
         name = (TextView) getView().findViewById(R.id.profile_name);
         profilePictureView = (ProfilePictureView) getView().findViewById(R.id.profilePicture);
+        actionMenu = (FloatingActionsMenu) getView().findViewById(R.id.add_vob_menu);
+        addTextVOBButton = (FloatingActionButton) getView().findViewById(R.id.add_text_vob);
+        addPictureVOBButton = (FloatingActionButton) getView().findViewById(R.id.add_picture_vob);
+
+        addTextVOBButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getActivity(), "Add Text VOB Clicked!", Toast.LENGTH_SHORT).show();
+                actionMenu.collapse();
+            }
+        });
+
+        addPictureVOBButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getActivity(), "Add Picture VOB Clicked!", Toast.LENGTH_SHORT).show();
+                actionMenu.collapse();
+            }
+        });
+
         updateUI();
     }
 
