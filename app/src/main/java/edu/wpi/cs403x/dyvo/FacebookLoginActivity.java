@@ -29,7 +29,7 @@ public class FacebookLoginActivity extends ActionBarActivity {
         // Initialize the view and login button
         setContentView(R.layout.activity_facebook_login);
         LoginButton loginButton = (LoginButton) findViewById(R.id.login_button);
-        loginButton.setReadPermissions(Arrays.asList("public_profile","user_friends"));
+        loginButton.setReadPermissions(Arrays.asList("public_profile","email","user_friends"));
 
         // Callback registration
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
