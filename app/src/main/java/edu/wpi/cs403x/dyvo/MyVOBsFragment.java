@@ -1,6 +1,8 @@
 package edu.wpi.cs403x.dyvo;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -24,11 +26,14 @@ public class MyVOBsFragment extends Fragment {
 
     private ProfilePictureView profilePictureView;
     private TextView name;
+    private TextView email;
+    private TextView authentication_token;
     private FloatingActionsMenu actionMenu;
     private FloatingActionButton addTextVOBButton;
     private FloatingActionButton addPictureVOBButton;
 
     private ProfileTracker profileTracker;
+    private SharedPreferences settings;
 
     public static MyVOBsFragment newInstance(int sectionNumber) {
         MyVOBsFragment fragment = new MyVOBsFragment();
@@ -55,7 +60,12 @@ public class MyVOBsFragment extends Fragment {
         // Initialize Facebook data
         Profile.fetchProfileForCurrentAccessToken();
 
+        // Initialize the settings
+        settings = getActivity().getSharedPreferences(FacebookLoginActivity.PREFS_NAME, Context.MODE_PRIVATE);
+
         name = (TextView) getView().findViewById(R.id.profile_name);
+        email = (TextView) getView().findViewById(R.id.email);
+        authentication_token = (TextView) getView().findViewById(R.id.authentication_token);
         profilePictureView = (ProfilePictureView) getView().findViewById(R.id.profilePicture);
         actionMenu = (FloatingActionsMenu) getView().findViewById(R.id.add_vob_menu);
         addTextVOBButton = (FloatingActionButton) getView().findViewById(R.id.add_text_vob);
@@ -89,6 +99,8 @@ public class MyVOBsFragment extends Fragment {
             profilePictureView.setProfileId(null);
             name.setText(null);
         }
+        email.setText(settings.getString("email", "default_email"));
+        authentication_token.setText(settings.getString("authentication_token", "default_token"));
     }
 
     @Override

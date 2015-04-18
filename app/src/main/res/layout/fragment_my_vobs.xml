@@ -9,7 +9,7 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal|top">
         <com.facebook.login.widget.ProfilePictureView
             android:id="@+id/profilePicture"
@@ -23,6 +23,14 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/profile_name" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/email" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/authentication_token" />
     </LinearLayout>
     <com.getbase.floatingactionbutton.FloatingActionsMenu
         android:id="@+id/add_vob_menu"
