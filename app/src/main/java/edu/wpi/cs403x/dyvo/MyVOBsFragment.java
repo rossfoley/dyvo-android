@@ -9,6 +9,9 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,16 +27,13 @@ public class MyVOBsFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    private ProfilePictureView profilePictureView;
-    private TextView name;
-    private TextView email;
-    private TextView authentication_token;
+    private ListView vobList;
     private FloatingActionsMenu actionMenu;
     private FloatingActionButton addTextVOBButton;
     private FloatingActionButton addPictureVOBButton;
 
-    private ProfileTracker profileTracker;
     private SharedPreferences settings;
+    private ArrayAdapter<String> adapter;
 
     public static MyVOBsFragment newInstance(int sectionNumber) {
         MyVOBsFragment fragment = new MyVOBsFragment();
@@ -49,24 +49,10 @@ public class MyVOBsFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
-        profileTracker = new ProfileTracker() {
-            @Override
-            protected void onCurrentProfileChanged(Profile oldProfile, Profile currentProfile) {
-                updateUI();
-            }
-        };
-        profileTracker.startTracking();
-
-        // Initialize Facebook data
-        Profile.fetchProfileForCurrentAccessToken();
-
         // Initialize the settings
         settings = getActivity().getSharedPreferences(FacebookLoginActivity.PREFS_NAME, Context.MODE_PRIVATE);
 
-        name = (TextView) getView().findViewById(R.id.profile_name);
-        email = (TextView) getView().findViewById(R.id.email);
-        authentication_token = (TextView) getView().findViewById(R.id.authentication_token);
-        profilePictureView = (ProfilePictureView) getView().findViewById(R.id.profilePicture);
+        // Initialize floating action menu items
         actionMenu = (FloatingActionsMenu) getView().findViewById(R.id.add_vob_menu);
         addTextVOBButton = (FloatingActionButton) getView().findViewById(R.id.add_text_vob);
         addPictureVOBButton = (FloatingActionButton) getView().findViewById(R.id.add_picture_vob);
@@ -87,20 +73,21 @@ public class MyVOBsFragment extends Fragment {
             }
         });
 
-        updateUI();
-    }
+        // Initialize ListView
+        vobList = (ListView) getView().findViewById(R.id.vob_list);
+        String[] values = new String[] { "VOB A", "VOB B", "VOB C"};
 
-    private void updateUI() {
-        Profile profile = Profile.getCurrentProfile();
-        if (profile != null) {
-            profilePictureView.setProfileId(profile.getId());
-            name.setText(profile.getName());
-        } else {
-            profilePictureView.setProfileId(null);
-            name.setText(null);
-        }
-        email.setText(settings.getString("email", "default_email"));
-        authentication_token.setText(settings.getString("authentication_token", "default_token"));
+        adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, android.R.id.text1, values);
+        vobList.setAdapter(adapter);
+
+        vobList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String vobText = (String) vobList.getItemAtPosition(position);
+                String alert = "You selected VOB #" + position + ": " + vobText;
+                Toast.makeText(getActivity(), alert, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
@@ -128,12 +115,6 @@ public class MyVOBsFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        profileTracker.stopTracking();
     }
 
     // TODO: Rename method, update argument and hook method into UI event
