@@ -50,8 +50,6 @@ public class FacebookLoginActivity extends ActionBarActivity {
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-                // Go to the Main Activity
-//                startActivity(new Intent(FacebookLoginActivity.this, MainActivity.class));
                 loginToServer();
             }
 
@@ -73,7 +71,6 @@ public class FacebookLoginActivity extends ActionBarActivity {
     }
 
     public void loginToServer() {
-        // Make a toast to notify the user that a login is taking place
         // TODO: change to a spinning wheel instead of a toast
         Toast.makeText(getApplicationContext(), "Logging into Dyvo servers...", Toast.LENGTH_SHORT).show();
 
@@ -81,6 +78,7 @@ public class FacebookLoginActivity extends ActionBarActivity {
         AsyncHttpClient client = new AsyncHttpClient();
         RequestParams params = new RequestParams();
         params.put("access_token", AccessToken.getCurrentAccessToken().getToken());
+
         client.post("http://dyvo.herokuapp.com/api/facebook/login", params, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {

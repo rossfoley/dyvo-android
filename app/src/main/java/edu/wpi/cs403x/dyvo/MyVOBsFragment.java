@@ -135,6 +135,7 @@ public class MyVOBsFragment extends Fragment {
         AsyncHttpClient client = new AsyncHttpClient();
         client.addHeader("X-User-Email", settings.getString("email", ""));
         client.addHeader("X-User-Token", settings.getString("authentication_token", ""));
+
         client.get(getActivity(), "http://dyvo.herokuapp.com/api/users/vobs", new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
