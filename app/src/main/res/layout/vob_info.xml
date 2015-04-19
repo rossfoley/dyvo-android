@@ -42,32 +42,34 @@
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
-        android:id="@+id/latitude"
+        android:id="@+id/content"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/textView3"
-        android:layout_alignBottom="@+id/textView3"
-        android:layout_toEndOf="@+id/textView3" />
-
-    <TextView
-        android:id="@+id/user_id"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/textView4"
-        android:layout_alignBottom="@+id/textView4"
-        android:layout_alignStart="@+id/latitude" />
+        android:layout_toEndOf="@+id/textView1"
+        android:layout_alignBaseline="@+id/textView1" />
 
     <TextView
         android:id="@+id/longitude"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/textView3"
-        android:layout_alignStart="@+id/textView3" />
+        android:layout_toEndOf="@+id/textView2"
+        android:layout_below="@+id/content"
+        android:layout_alignBaseline="@+id/textView2"/>
 
     <TextView
-        android:id="@+id/content"
+        android:id="@+id/latitude"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/textView2"
-        android:layout_alignStart="@+id/longitude" />
+        android:layout_toEndOf="@+id/textView3"
+        android:layout_below="@+id/longitude"
+        android:layout_alignBaseline="@+id/textView3" />
+
+    <TextView
+        android:id="@+id/user_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@+id/textView4"
+        android:layout_below="@+id/latitude"
+        android:layout_alignBaseline="@+id/textView4"/>
+
 </RelativeLayout>

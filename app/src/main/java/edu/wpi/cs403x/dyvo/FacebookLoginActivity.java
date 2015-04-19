@@ -75,7 +75,7 @@ public class FacebookLoginActivity extends ActionBarActivity {
     public void loginToServer() {
         // Make a toast to notify the user that a login is taking place
         // TODO: change to a spinning wheel instead of a toast
-        Toast.makeText(getApplicationContext(), "Logging into Dyvo servers...", Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), "Logging into Dyvo servers...", Toast.LENGTH_SHORT).show();
 
         // Perform the Login
         AsyncHttpClient client = new AsyncHttpClient();
@@ -99,7 +99,7 @@ public class FacebookLoginActivity extends ActionBarActivity {
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject response) {
                 String message = "Failed to login to Dyvo's servers.  Error code: " + statusCode;
-                Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
             }
         });
     }

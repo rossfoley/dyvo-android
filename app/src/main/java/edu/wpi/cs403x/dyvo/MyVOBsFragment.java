@@ -61,8 +61,8 @@ public class MyVOBsFragment extends Fragment {
     public MyVOBsFragment() {}
 
     @Override
-    public void onStart() {
-        super.onStart();
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
         // Initialize the settings
         settings = getActivity().getSharedPreferences(FacebookLoginActivity.PREFS_NAME, Context.MODE_PRIVATE);
@@ -135,9 +135,10 @@ public class MyVOBsFragment extends Fragment {
         AsyncHttpClient client = new AsyncHttpClient();
         client.addHeader("X-User-Email", settings.getString("email", ""));
         client.addHeader("X-User-Token", settings.getString("authentication_token", ""));
-        client.get("http://dyvo.herokuapp.com/api/users/vobs", new JsonHttpResponseHandler() {
+        client.get(getActivity(), "http://dyvo.herokuapp.com/api/users/vobs", new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Toast.makeText(getActivity(), "Successfully refreshed My VOBs", Toast.LENGTH_LONG).show();
                 dbHelper.deleteAllVobs();
                 try {
                     JSONArray data = response.getJSONArray("data");
@@ -149,6 +150,7 @@ public class MyVOBsFragment extends Fragment {
                         float latitude = (float) vob.getJSONArray("location").getDouble(1);
                         dbHelper.createVob(content, userId, longitude, latitude);
                     }
+                    adapter.changeCursor(dbHelper.fetchAllVobs());
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -187,6 +189,12 @@ public class MyVOBsFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        dbHelper.close();
     }
 
     // TODO: Rename method, update argument and hook method into UI event
