@@ -2,7 +2,9 @@ package edu.wpi.cs403x.dyvo;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,14 +14,26 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.AccessToken;
 import com.facebook.Profile;
 import com.facebook.ProfileTracker;
 import com.facebook.login.widget.ProfilePictureView;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+
+import org.apache.http.Header;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import edu.wpi.cs403x.dyvo.db.VobsDbAdapter;
 
 
 public class MyVOBsFragment extends Fragment {
@@ -33,7 +47,8 @@ public class MyVOBsFragment extends Fragment {
     private FloatingActionButton addPictureVOBButton;
 
     private SharedPreferences settings;
-    private ArrayAdapter<String> adapter;
+    private SimpleCursorAdapter adapter;
+    private VobsDbAdapter dbHelper;
 
     public static MyVOBsFragment newInstance(int sectionNumber) {
         MyVOBsFragment fragment = new MyVOBsFragment();
@@ -52,6 +67,46 @@ public class MyVOBsFragment extends Fragment {
         // Initialize the settings
         settings = getActivity().getSharedPreferences(FacebookLoginActivity.PREFS_NAME, Context.MODE_PRIVATE);
 
+        // Initialize the database helper
+        dbHelper = new VobsDbAdapter(getActivity());
+        dbHelper.open();
+
+        refreshVobDatabase();
+        initializeActionMenu();
+        initializeListView();
+    }
+
+    private void initializeListView() {
+        Cursor cursor = dbHelper.fetchAllVobs();
+        String[] columns = new String[] {
+                VobsDbAdapter.KEY_CONTENT,
+                VobsDbAdapter.KEY_LONGITUDE,
+                VobsDbAdapter.KEY_LATITUDE,
+                VobsDbAdapter.KEY_USER_ID
+        };
+        int[] to = new int[] {
+                R.id.content,
+                R.id.longitude,
+                R.id.latitude,
+                R.id.user_id
+        };
+
+        adapter = new SimpleCursorAdapter(getActivity(), R.layout.vob_info, cursor, columns, to, 0);
+        vobList = (ListView) getView().findViewById(R.id.vob_list);
+        vobList.setAdapter(adapter);
+
+        vobList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Cursor cursor = (Cursor) vobList.getItemAtPosition(position);
+                String content = cursor.getString(cursor.getColumnIndexOrThrow("content"));
+                String message = "You selected VOB with content: " + content;
+                Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void initializeActionMenu() {
         // Initialize floating action menu items
         actionMenu = (FloatingActionsMenu) getView().findViewById(R.id.add_vob_menu);
         addTextVOBButton = (FloatingActionButton) getView().findViewById(R.id.add_text_vob);
@@ -72,20 +127,37 @@ public class MyVOBsFragment extends Fragment {
                 actionMenu.collapse();
             }
         });
+    }
 
-        // Initialize ListView
-        vobList = (ListView) getView().findViewById(R.id.vob_list);
-        String[] values = new String[] { "VOB A", "VOB B", "VOB C"};
-
-        adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, android.R.id.text1, values);
-        vobList.setAdapter(adapter);
-
-        vobList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+    private void refreshVobDatabase() {
+        // TODO: this only refreshes the current user's VOBs.  Eventually, add another
+        // database table to differentiate all VOBs and the current user's VOBs
+        AsyncHttpClient client = new AsyncHttpClient();
+        client.addHeader("X-User-Email", settings.getString("email", ""));
+        client.addHeader("X-User-Token", settings.getString("authentication_token", ""));
+        client.get("http://dyvo.herokuapp.com/api/users/vobs", new JsonHttpResponseHandler() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String vobText = (String) vobList.getItemAtPosition(position);
-                String alert = "You selected VOB #" + position + ": " + vobText;
-                Toast.makeText(getActivity(), alert, Toast.LENGTH_SHORT).show();
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                dbHelper.deleteAllVobs();
+                try {
+                    JSONArray data = response.getJSONArray("data");
+                    for (int i = 0; i < data.length(); i++) {
+                        JSONObject vob = data.getJSONObject(i);
+                        String content = vob.getString("content");
+                        String userId = vob.getString("user_id");
+                        float longitude = (float) vob.getJSONArray("location").getDouble(0);
+                        float latitude = (float) vob.getJSONArray("location").getDouble(1);
+                        dbHelper.createVob(content, userId, longitude, latitude);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject response) {
+                String message = "Failed to refresh My VOBs.  Error code: " + statusCode;
+                Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
             }
         });
     }

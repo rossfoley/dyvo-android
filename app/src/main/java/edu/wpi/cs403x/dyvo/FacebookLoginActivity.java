@@ -7,6 +7,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
@@ -72,6 +73,11 @@ public class FacebookLoginActivity extends ActionBarActivity {
     }
 
     public void loginToServer() {
+        // Make a toast to notify the user that a login is taking place
+        // TODO: change to a spinning wheel instead of a toast
+        Toast.makeText(getApplicationContext(), "Logging into Dyvo servers...", Toast.LENGTH_LONG).show();
+
+        // Perform the Login
         AsyncHttpClient client = new AsyncHttpClient();
         RequestParams params = new RequestParams();
         params.put("access_token", AccessToken.getCurrentAccessToken().getToken());
@@ -88,6 +94,12 @@ public class FacebookLoginActivity extends ActionBarActivity {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject response) {
+                String message = "Failed to login to Dyvo's servers.  Error code: " + statusCode;
+                Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
             }
         });
     }
