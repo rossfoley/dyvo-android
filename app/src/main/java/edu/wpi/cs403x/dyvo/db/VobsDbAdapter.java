@@ -99,4 +99,17 @@ public class VobsDbAdapter {
 
         return mCursor;
     }
+
+    public Cursor fetchVobById(String id) {
+        Cursor cursor = mDb.query(SQLITE_TABLE,
+                ALL_COLUMNS,
+                KEY_ROWID + "=?",
+                new String[] {id},
+                null, null, null, null);
+        if (cursor != null) {
+            cursor.moveToFirst();
+        }
+
+        return cursor;
+    }
 }

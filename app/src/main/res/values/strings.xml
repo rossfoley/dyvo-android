@@ -24,4 +24,5 @@
     <string name="longitude_label">Longitude:</string>
     <string name="latitude_label">Latitude:</string>
     <string name="user_id_label">User ID:</string>
+    <string name="title_activity_vobdetail">VOBDetailActivity</string>
 </resources>

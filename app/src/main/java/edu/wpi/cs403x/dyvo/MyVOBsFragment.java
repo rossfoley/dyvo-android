@@ -39,6 +39,7 @@ import edu.wpi.cs403x.dyvo.db.VobsDbAdapter;
 
 public class MyVOBsFragment extends Fragment {
     private static final String ARG_SECTION_NUMBER = "section_number";
+    public static final String EXTRA_VOB_ID = "vob_id";
 
     private OnFragmentInteractionListener mListener;
 
@@ -109,9 +110,10 @@ public class MyVOBsFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Cursor cursor = (Cursor) vobList.getItemAtPosition(position);
-                String content = cursor.getString(cursor.getColumnIndexOrThrow("content"));
-                String message = "You selected VOB with content: " + content;
-                Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+                String vobId = cursor.getString(cursor.getColumnIndexOrThrow(VobsDbAdapter.KEY_ROWID));
+                Intent intent = new Intent(getActivity(), VOBDetailActivity.class);
+                intent.putExtra(EXTRA_VOB_ID, vobId);
+                startActivity(intent);
             }
         });
     }
