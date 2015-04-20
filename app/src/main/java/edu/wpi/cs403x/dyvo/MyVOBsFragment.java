@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,6 +43,7 @@ public class MyVOBsFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
 
     private ListView vobList;
+    private SwipeRefreshLayout refreshLayout;
     private FloatingActionsMenu actionMenu;
     private FloatingActionButton addTextVOBButton;
     private FloatingActionButton addPictureVOBButton;
@@ -74,6 +76,14 @@ public class MyVOBsFragment extends Fragment {
         refreshVobDatabase();
         initializeActionMenu();
         initializeListView();
+
+        refreshLayout = (SwipeRefreshLayout) getView().findViewById(R.id.refresh_vobs);
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refreshVobDatabase();
+            }
+        });
     }
 
     private void initializeListView() {
@@ -152,6 +162,7 @@ public class MyVOBsFragment extends Fragment {
                         dbHelper.createVob(content, userId, longitude, latitude);
                     }
                     adapter.changeCursor(dbHelper.fetchAllVobs());
+                    refreshLayout.setRefreshing(false);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
