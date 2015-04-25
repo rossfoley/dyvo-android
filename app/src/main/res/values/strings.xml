@@ -14,7 +14,7 @@
     <string name="title_activity_facebook_login">FacebookLoginActivity</string>
 
     <string name="hello_world">Hello world!</string>
-
+    <string name="create_vob_activity_title">Drop VOB</string>
     <string name="app_id">684226168353798</string>
     <string name="facebook_app_name">Dyvo</string>
 
@@ -24,5 +24,8 @@
     <string name="longitude_label">Longitude:</string>
     <string name="latitude_label">Latitude:</string>
     <string name="user_id_label">User ID:</string>
+    <string name="row_id_label">Vob ID:</string>
     <string name="title_activity_vobdetail">VOBDetailActivity</string>
+    <string name="title_activity_create_vob">CreateVobActivity</string>
+    <string name="drop_text">Drop</string>
 </resources>

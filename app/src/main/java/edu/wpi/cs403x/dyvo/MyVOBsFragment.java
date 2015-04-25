@@ -7,6 +7,8 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
@@ -34,6 +36,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import edu.wpi.cs403x.dyvo.db.CursorAdapter;
 import edu.wpi.cs403x.dyvo.db.VobsDbAdapter;
 
 
@@ -69,10 +72,10 @@ public class MyVOBsFragment extends Fragment {
 
         // Initialize the settings
         settings = getActivity().getSharedPreferences(FacebookLoginActivity.PREFS_NAME, Context.MODE_PRIVATE);
+        CursorAdapter.getInstance().initialize(getActivity());
 
         // Initialize the database helper
-        dbHelper = new VobsDbAdapter(getActivity());
-        dbHelper.open();
+        dbHelper = CursorAdapter.getInstance().getDBHelper();
 
         refreshVobDatabase();
         initializeActionMenu();
@@ -88,21 +91,9 @@ public class MyVOBsFragment extends Fragment {
     }
 
     private void initializeListView() {
-        Cursor cursor = dbHelper.fetchAllVobs();
-        String[] columns = new String[] {
-                VobsDbAdapter.KEY_CONTENT,
-                VobsDbAdapter.KEY_LONGITUDE,
-                VobsDbAdapter.KEY_LATITUDE,
-                VobsDbAdapter.KEY_USER_ID
-        };
-        int[] to = new int[] {
-                R.id.content,
-                R.id.longitude,
-                R.id.latitude,
-                R.id.user_id
-        };
+        adapter = CursorAdapter.getInstance().getCursorAdapter();
 
-        adapter = new SimpleCursorAdapter(getActivity(), R.layout.vob_info, cursor, columns, to, 0);
+
         vobList = (ListView) getView().findViewById(R.id.vob_list);
         vobList.setAdapter(adapter);
 
@@ -127,7 +118,8 @@ public class MyVOBsFragment extends Fragment {
         addTextVOBButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getActivity(), "Add Text VOB Clicked!", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getActivity(), CreateVobActivity.class);
+                startActivity(intent);
                 actionMenu.collapse();
             }
         });
@@ -138,6 +130,7 @@ public class MyVOBsFragment extends Fragment {
                 Toast.makeText(getActivity(), "Add Picture VOB Clicked!", Toast.LENGTH_SHORT).show();
                 actionMenu.collapse();
             }
+
         });
     }
 

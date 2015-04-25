@@ -29,15 +29,15 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name" >
-        </activity>
-        <activity
-            android:name=".FacebookLoginActivity"
-            android:label="@string/title_activity_facebook_login" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".FacebookLoginActivity"
+            android:label="@string/title_activity_facebook_login" >
         </activity>
         <activity
             android:name="com.facebook.FacebookActivity"
@@ -62,6 +62,13 @@
             android:name=".VOBDetailActivity"
             android:label="@string/title_activity_vobdetail"
             android:parentActivityName=".MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="edu.wpi.cs403x.dyvo.MainActivity" />
+        </activity>
+        <activity
+            android:name=".CreateVobActivity"
+            android:label="@string/title_activity_create_vob" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="edu.wpi.cs403x.dyvo.MainActivity" />
