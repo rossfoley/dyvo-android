@@ -83,6 +83,12 @@ public class MyVOBsFragment extends Fragment {
         });
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        refreshVobDatabase();
+    }
+
     private void initializeListView() {
         // Initialize the database helper
         dbHelper = new VobsDbAdapter(getActivity());

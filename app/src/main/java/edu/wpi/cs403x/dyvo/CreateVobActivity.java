@@ -52,8 +52,8 @@ public class CreateVobActivity extends ActionBarActivity {
         settings = getSharedPreferences(FacebookLoginActivity.PREFS_NAME, Context.MODE_PRIVATE);
 
         // Initialize the database helper and adapter
-        dbHelper = CursorAdapter.getInstance().getDBHelper();
-        adapter = CursorAdapter.getInstance().getCursorAdapter();
+        dbHelper = new VobsDbAdapter(this);
+        dbHelper.open();
 
         // Initialize TextView
         textView = (TextView) findViewById(R.id.create_vob_text_content);
@@ -111,7 +111,6 @@ public class CreateVobActivity extends ActionBarActivity {
                     float longitude = (float) vob.getJSONArray("location").getDouble(0);
                     float latitude = (float) vob.getJSONArray("location").getDouble(1);
                     dbHelper.createVob(content, userId, longitude, latitude);
-                    adapter.changeCursor(dbHelper.fetchAllVobs());
                     finish();
                 } catch (JSONException e) {
                     e.printStackTrace();
