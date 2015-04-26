@@ -43,20 +43,7 @@ public class CursorAdapter {
         dbHelper.open();
 
         Cursor cursor = dbHelper.fetchAllVobs();
-//        String[] columns = new String[] {
-//                VobsDbAdapter.KEY_CONTENT,
-//                VobsDbAdapter.KEY_LONGITUDE,
-//                VobsDbAdapter.KEY_LATITUDE,
-//                VobsDbAdapter.KEY_USER_ID,
-//                VobsDbAdapter.KEY_ROWID
-//        };
-//        int[] to = new int[] {
-//                R.id.content,
-//                R.id.longitude,
-//                R.id.latitude,
-//                R.id.user_id,
-//                R.id.row_id
-//        };
+
 
         adapter = new VobViewCursorAdapter(ctx, cursor, 0);
     }

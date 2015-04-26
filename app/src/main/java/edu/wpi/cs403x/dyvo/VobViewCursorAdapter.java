@@ -68,7 +68,7 @@ public class VobViewCursorAdapter extends CursorAdapter {
         final RequestParams params = new RequestParams();
         params.put("access_token", AccessToken.getCurrentAccessToken().getToken());
 
-        final RequestHandle requestHandle = client.get(context, "https://graph.facebook.com/?ids="+ fbIdStr +"&fields=name,picture",  params , new JsonHttpResponseHandler() {
+        final RequestHandle requestHandle = client.get(context, "https://graph.facebook.com/?ids="+ fbIdStr +"&fields=name,picture&type=large&redirect=true&width=200&height=200",  params , new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 try {
@@ -86,6 +86,7 @@ public class VobViewCursorAdapter extends CursorAdapter {
                         @Override
                         public void run(){
                             try {
+
                                 URL newurl = new URL(pictureURL);
                                 final Bitmap userImage = BitmapFactory.decodeStream(newurl.openConnection().getInputStream());
 

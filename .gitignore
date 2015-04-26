@@ -5,3 +5,5 @@
 .DS_Store
 /build
 /.idea
+/.idea/gradle.xml
+android.iml

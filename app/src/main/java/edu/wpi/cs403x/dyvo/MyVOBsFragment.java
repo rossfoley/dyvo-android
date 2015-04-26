@@ -22,6 +22,7 @@ import com.getbase.floatingactionbutton.FloatingActionsMenu;
 
 import edu.wpi.cs403x.dyvo.api.DyvoServer;
 import edu.wpi.cs403x.dyvo.api.DyvoServerAction;
+import edu.wpi.cs403x.dyvo.db.CursorAdapter;
 import edu.wpi.cs403x.dyvo.db.VobsDbAdapter;
 
 
@@ -90,22 +91,9 @@ public class MyVOBsFragment extends Fragment {
         dbHelper.open();
 
         Cursor cursor = dbHelper.fetchAllVobs();
-        String[] columns = new String[] {
-                VobsDbAdapter.KEY_CONTENT,
-                VobsDbAdapter.KEY_LONGITUDE,
-                VobsDbAdapter.KEY_LATITUDE,
-                VobsDbAdapter.KEY_USER_ID,
-                VobsDbAdapter.KEY_ROWID
-        };
-        int[] to = new int[] {
-                R.id.content,
-                R.id.longitude,
-                R.id.latitude,
-                R.id.user_id,
-                R.id.row_id
-        };
+        CursorAdapter.getInstance().initialize(getActivity());
 
-        adapter = new SimpleCursorAdapter(getActivity(), R.layout.vob_info, cursor, columns, to, 0);
+        adapter = CursorAdapter.getInstance().getCursorAdapter();
 
         vobList = (ListView) getView().findViewById(R.id.vob_list);
         vobList.setAdapter(adapter);
