@@ -22,7 +22,6 @@ import com.getbase.floatingactionbutton.FloatingActionsMenu;
 
 import edu.wpi.cs403x.dyvo.api.DyvoServer;
 import edu.wpi.cs403x.dyvo.api.DyvoServerAction;
-import edu.wpi.cs403x.dyvo.db.CursorAdapter;
 import edu.wpi.cs403x.dyvo.db.VobsDbAdapter;
 
 
@@ -58,7 +57,6 @@ public class MyVOBsFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         // Initialize the settings
-
         settings = getActivity().getSharedPreferences(FacebookLoginActivity.PREFS_NAME, Context.MODE_PRIVATE);
 
         // Initialize the database helper
@@ -97,9 +95,22 @@ public class MyVOBsFragment extends Fragment {
         dbHelper.open();
 
         Cursor cursor = dbHelper.fetchAllVobs();
-        CursorAdapter.getInstance().initialize(getActivity());
+        String[] columns = new String[] {
+                VobsDbAdapter.KEY_CONTENT,
+                VobsDbAdapter.KEY_LONGITUDE,
+                VobsDbAdapter.KEY_LATITUDE,
+                VobsDbAdapter.KEY_USER_ID,
+                VobsDbAdapter.KEY_ROW_ID
+        };
+        int[] to = new int[] {
+                R.id.content,
+                R.id.longitude,
+                R.id.latitude,
+                R.id.user_id,
+                R.id.row_id
+        };
 
-        adapter = CursorAdapter.getInstance().getCursorAdapter();
+        adapter = new SimpleCursorAdapter(getActivity(), R.layout.vob_info, cursor, columns, to, 0);
 
         vobList = (ListView) getView().findViewById(R.id.vob_list);
         vobList.setAdapter(adapter);
@@ -108,7 +119,7 @@ public class MyVOBsFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Cursor cursor = (Cursor) vobList.getItemAtPosition(position);
-                String vobId = cursor.getString(cursor.getColumnIndexOrThrow(VobsDbAdapter.KEY_ROWID));
+                String vobId = cursor.getString(cursor.getColumnIndexOrThrow(VobsDbAdapter.KEY_ROW_ID));
                 Intent intent = new Intent(getActivity(), VOBDetailActivity.class);
                 intent.putExtra(EXTRA_VOB_ID, vobId);
                 startActivity(intent);
