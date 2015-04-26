@@ -112,4 +112,17 @@ public class VobsDbAdapter {
 
         return cursor;
     }
+
+    public Cursor fetchVobsByUser(String uid) {
+        Cursor cursor = mDb.query(SQLITE_TABLE,
+                ALL_COLUMNS,
+                KEY_USER_ID + "=?",
+                new String[] {uid},
+                null, null, null, null);
+        if (cursor != null) {
+            cursor.moveToFirst();
+        }
+
+        return cursor;
+    }
 }
