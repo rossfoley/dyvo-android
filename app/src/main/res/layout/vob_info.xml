@@ -5,88 +5,43 @@
     android:orientation="vertical"
     android:padding="6dip" >
 
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:text="@string/content_label"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:layout_alignParentStart="true">
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/textView1"
-        android:layout_below="@+id/textView1"
-        android:text="@string/longitude_label"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:id="@+id/vob_info_user_picture"
+            android:contentDescription="profile_picture" />
 
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/textView2"
-        android:layout_below="@+id/textView2"
-        android:text="@string/latitude_label"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/textView4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/textView3"
-        android:layout_below="@+id/textView3"
-        android:text="@string/user_id_label"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="User Name"
+                android:id="@+id/vob_info_user_name" />
 
-    <TextView
-        android:id="@+id/textView5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/textView4"
-        android:layout_below="@+id/textView4"
-        android:text="@string/row_id_label"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/content"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toEndOf="@+id/textView1"
-        android:layout_alignBaseline="@+id/textView1" />
-
-    <TextView
-        android:id="@+id/longitude"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toEndOf="@+id/textView2"
-        android:layout_below="@+id/content"
-        android:layout_alignBaseline="@+id/textView2"/>
-
-    <TextView
-        android:id="@+id/latitude"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toEndOf="@+id/textView3"
-        android:layout_below="@+id/longitude"
-        android:layout_alignBaseline="@+id/textView3" />
-
-    <TextView
-        android:id="@+id/user_id"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toEndOf="@+id/textView4"
-        android:layout_below="@+id/latitude"
-        android:layout_alignBaseline="@+id/textView4"/>
-
-    <TextView
-        android:id="@+id/row_id"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toEndOf="@+id/textView5"
-        android:layout_below="@+id/latitude"
-        android:layout_alignBaseline="@+id/textView5"/>
-
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/default_content"
+                    android:id="@+id/vob_info_content" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
 </RelativeLayout>

@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.widget.SimpleCursorAdapter;
 
 import edu.wpi.cs403x.dyvo.R;
+import edu.wpi.cs403x.dyvo.VobViewCursorAdapter;
 
 /**
  * Created by cdhan_000 on 4/25/2015.
@@ -20,14 +21,14 @@ public class CursorAdapter {
         return instance;
     }
 
-    private SimpleCursorAdapter adapter;
+    private VobViewCursorAdapter adapter;
     private VobsDbAdapter dbHelper;
 
     private CursorAdapter(){
         //singleton constructor
     }
 
-    public SimpleCursorAdapter getCursorAdapter(){
+    public VobViewCursorAdapter getCursorAdapter(){
         return adapter;
     }
 
@@ -42,21 +43,21 @@ public class CursorAdapter {
         dbHelper.open();
 
         Cursor cursor = dbHelper.fetchAllVobs();
-        String[] columns = new String[] {
-                VobsDbAdapter.KEY_CONTENT,
-                VobsDbAdapter.KEY_LONGITUDE,
-                VobsDbAdapter.KEY_LATITUDE,
-                VobsDbAdapter.KEY_USER_ID,
-                VobsDbAdapter.KEY_ROWID
-        };
-        int[] to = new int[] {
-                R.id.content,
-                R.id.longitude,
-                R.id.latitude,
-                R.id.user_id,
-                R.id.row_id
-        };
+//        String[] columns = new String[] {
+//                VobsDbAdapter.KEY_CONTENT,
+//                VobsDbAdapter.KEY_LONGITUDE,
+//                VobsDbAdapter.KEY_LATITUDE,
+//                VobsDbAdapter.KEY_USER_ID,
+//                VobsDbAdapter.KEY_ROWID
+//        };
+//        int[] to = new int[] {
+//                R.id.content,
+//                R.id.longitude,
+//                R.id.latitude,
+//                R.id.user_id,
+//                R.id.row_id
+//        };
 
-        adapter = new SimpleCursorAdapter(ctx, R.layout.vob_info, cursor, columns, to, 0);
+        adapter = new VobViewCursorAdapter(ctx, cursor, 0);
     }
 }

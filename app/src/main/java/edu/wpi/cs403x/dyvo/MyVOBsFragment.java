@@ -53,7 +53,7 @@ public class MyVOBsFragment extends Fragment {
     private FloatingActionButton addPictureVOBButton;
 
     private SharedPreferences settings;
-    private SimpleCursorAdapter adapter;
+    private VobViewCursorAdapter adapter;
     private VobsDbAdapter dbHelper;
 
     public static MyVOBsFragment newInstance(int sectionNumber) {
@@ -71,6 +71,7 @@ public class MyVOBsFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         // Initialize the settings
+
         settings = getActivity().getSharedPreferences(FacebookLoginActivity.PREFS_NAME, Context.MODE_PRIVATE);
         CursorAdapter.getInstance().initialize(getActivity());
 

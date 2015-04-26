@@ -2,15 +2,14 @@ package edu.wpi.cs403x.dyvo;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,7 +31,7 @@ public class CreateVobActivity extends ActionBarActivity {
     private TextView textView;
     private SharedPreferences settings;
     private VobsDbAdapter dbHelper;
-    private SimpleCursorAdapter adapter;
+    private VobViewCursorAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,6 +112,8 @@ public class CreateVobActivity extends ActionBarActivity {
                     float latitude = (float) vob.getJSONArray("location").getDouble(1);
                     dbHelper.createVob(content, userId, longitude, latitude);
                     adapter.changeCursor(dbHelper.fetchAllVobs());
+
+
                     finish();
                 } catch (JSONException e) {
                     e.printStackTrace();

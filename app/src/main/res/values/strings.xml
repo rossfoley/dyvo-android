@@ -28,4 +28,6 @@
     <string name="title_activity_vobdetail">VOBDetailActivity</string>
     <string name="title_activity_create_vob">CreateVobActivity</string>
     <string name="drop_text">Drop</string>
+    <string name="default_user_name">Large Text</string>
+    <string name="default_content">Content</string>
 </resources>
