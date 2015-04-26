@@ -93,7 +93,6 @@ public class MyVOBsFragment extends Fragment {
     private void initializeListView() {
         adapter = CursorAdapter.getInstance().getCursorAdapter();
 
-
         vobList = (ListView) getView().findViewById(R.id.vob_list);
         vobList.setAdapter(adapter);
 

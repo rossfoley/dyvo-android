@@ -58,7 +58,7 @@ public class CreateVobActivity extends ActionBarActivity {
         // Initialize TextView
         textView = (TextView) findViewById(R.id.create_vob_text_content);
 
-        // Add Action to 'Drop" button
+        // Add Action to 'Drop' button
         dropBtn = (Button) findViewById(R.id.btn_drop);
         dropBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -101,10 +101,9 @@ public class CreateVobActivity extends ActionBarActivity {
         client.addHeader("X-User-Email", settings.getString("email", ""));
         client.addHeader("X-User-Token", settings.getString("authentication_token", ""));
 
-        client.post("http://dyvo.herokuapp.com/api/vobs", params, new JsonHttpResponseHandler(){
+        client.post("http://dyvo.herokuapp.com/api/vobs", params, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-
                 try {
                     JSONObject vob = response.getJSONObject("data");
                     String content = vob.getString("content");

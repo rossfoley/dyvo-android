@@ -7,36 +7,29 @@ import android.widget.SimpleCursorAdapter;
 
 import edu.wpi.cs403x.dyvo.R;
 
-/**
- * Created by cdhan_000 on 4/25/2015.
- */
 public class CursorAdapter {
+    private SimpleCursorAdapter adapter;
+    private VobsDbAdapter dbHelper;
 
     private static CursorAdapter instance;
-    public static CursorAdapter getInstance(){
+    public static CursorAdapter getInstance() {
         if (instance == null){
             instance = new CursorAdapter();
         }
         return instance;
     }
 
-    private SimpleCursorAdapter adapter;
-    private VobsDbAdapter dbHelper;
+    private CursorAdapter() {}
 
-    private CursorAdapter(){
-        //singleton constructor
-    }
-
-    public SimpleCursorAdapter getCursorAdapter(){
+    public SimpleCursorAdapter getCursorAdapter() {
         return adapter;
     }
 
-    public VobsDbAdapter getDBHelper(){
+    public VobsDbAdapter getDBHelper() {
         return dbHelper;
     }
 
-    public void initialize(Context ctx){
-
+    public void initialize(Context ctx) {
         // Initialize the database helper
         dbHelper = new VobsDbAdapter(ctx);
         dbHelper.open();
