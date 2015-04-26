@@ -7,38 +7,21 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.facebook.AccessToken;
-import com.facebook.Profile;
-import com.facebook.ProfileTracker;
-import com.facebook.login.widget.ProfilePictureView;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.JsonHttpResponseHandler;
-import com.loopj.android.http.RequestParams;
-
-import org.apache.http.Header;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import edu.wpi.cs403x.dyvo.api.DyvoServer;
 import edu.wpi.cs403x.dyvo.api.DyvoServerAction;
-import edu.wpi.cs403x.dyvo.db.CursorAdapter;
 import edu.wpi.cs403x.dyvo.db.VobsDbAdapter;
 
 
