@@ -87,6 +87,7 @@ public class FacebookLoginActivity extends ActionBarActivity {
                     JSONObject data = response.getJSONObject("data");
                     editor.putString("authentication_token", data.getString("authentication_token"));
                     editor.putString("email", data.getString("email"));
+                    editor.putString("uid", data.getString("uid"));
                     editor.apply();
                     startActivity(new Intent(FacebookLoginActivity.this, MainActivity.class));
                 } catch (JSONException e) {

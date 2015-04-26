@@ -36,6 +36,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import edu.wpi.cs403x.dyvo.api.DyvoServer;
+import edu.wpi.cs403x.dyvo.api.DyvoServerAction;
 import edu.wpi.cs403x.dyvo.db.CursorAdapter;
 import edu.wpi.cs403x.dyvo.db.VobsDbAdapter;
 
@@ -55,6 +57,7 @@ public class MyVOBsFragment extends Fragment {
     private SharedPreferences settings;
     private SimpleCursorAdapter adapter;
     private VobsDbAdapter dbHelper;
+    private DyvoServer server;
 
     public static MyVOBsFragment newInstance(int sectionNumber) {
         MyVOBsFragment fragment = new MyVOBsFragment();
@@ -72,10 +75,17 @@ public class MyVOBsFragment extends Fragment {
 
         // Initialize the settings
         settings = getActivity().getSharedPreferences(FacebookLoginActivity.PREFS_NAME, Context.MODE_PRIVATE);
-        CursorAdapter.getInstance().initialize(getActivity());
 
         // Initialize the database helper
-        dbHelper = CursorAdapter.getInstance().getDBHelper();
+        dbHelper = new VobsDbAdapter(getActivity());
+        dbHelper.open();
+
+        // Initialize the server API
+        server = new DyvoServer(
+                settings.getString("email", ""),
+                settings.getString("authentication_token", ""),
+                dbHelper,
+                getActivity());
 
         refreshVobDatabase();
         initializeActionMenu();
@@ -91,7 +101,27 @@ public class MyVOBsFragment extends Fragment {
     }
 
     private void initializeListView() {
-        adapter = CursorAdapter.getInstance().getCursorAdapter();
+        // Initialize the database helper
+        dbHelper = new VobsDbAdapter(getActivity());
+        dbHelper.open();
+
+        Cursor cursor = dbHelper.fetchAllVobs();
+        String[] columns = new String[] {
+                VobsDbAdapter.KEY_CONTENT,
+                VobsDbAdapter.KEY_LONGITUDE,
+                VobsDbAdapter.KEY_LATITUDE,
+                VobsDbAdapter.KEY_USER_ID,
+                VobsDbAdapter.KEY_ROWID
+        };
+        int[] to = new int[] {
+                R.id.content,
+                R.id.longitude,
+                R.id.latitude,
+                R.id.user_id,
+                R.id.row_id
+        };
+
+        adapter = new SimpleCursorAdapter(getActivity(), R.layout.vob_info, cursor, columns, to, 0);
 
         vobList = (ListView) getView().findViewById(R.id.vob_list);
         vobList.setAdapter(adapter);
@@ -134,38 +164,11 @@ public class MyVOBsFragment extends Fragment {
     }
 
     private void refreshVobDatabase() {
-        // TODO: this only refreshes the current user's VOBs.  Eventually, add another
-        // database table to differentiate all VOBs and the current user's VOBs
-        AsyncHttpClient client = new AsyncHttpClient();
-        client.addHeader("X-User-Email", settings.getString("email", ""));
-        client.addHeader("X-User-Token", settings.getString("authentication_token", ""));
-
-        client.get(getActivity(), "http://dyvo.herokuapp.com/api/users/vobs", new JsonHttpResponseHandler() {
+        server.refreshVobDatabase(new DyvoServerAction() {
             @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                Toast.makeText(getActivity(), "Successfully refreshed My VOBs", Toast.LENGTH_LONG).show();
-                dbHelper.deleteAllVobs();
-                try {
-                    JSONArray data = response.getJSONArray("data");
-                    for (int i = 0; i < data.length(); i++) {
-                        JSONObject vob = data.getJSONObject(i);
-                        String content = vob.getString("content");
-                        String userId = vob.getString("user_id");
-                        float longitude = (float) vob.getJSONArray("location").getDouble(0);
-                        float latitude = (float) vob.getJSONArray("location").getDouble(1);
-                        dbHelper.createVob(content, userId, longitude, latitude);
-                    }
-                    adapter.changeCursor(dbHelper.fetchAllVobs());
-                    refreshLayout.setRefreshing(false);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject response) {
-                String message = "Failed to refresh My VOBs.  Error code: " + statusCode;
-                Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+            public void onSuccess() {
+                adapter.changeCursor(dbHelper.fetchVobsByUser(settings.getString("uid", "")));
+                refreshLayout.setRefreshing(false);
             }
         });
     }
