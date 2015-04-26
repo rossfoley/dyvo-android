@@ -90,27 +90,7 @@ public class MyVOBsFragment extends Fragment {
     }
 
     private void initializeListView() {
-        // Initialize the database helper
-        dbHelper = new VobsDbAdapter(getActivity());
-        dbHelper.open();
-
-        Cursor cursor = dbHelper.fetchAllVobs();
-        String[] columns = new String[] {
-                VobsDbAdapter.KEY_CONTENT,
-                VobsDbAdapter.KEY_LONGITUDE,
-                VobsDbAdapter.KEY_LATITUDE,
-                VobsDbAdapter.KEY_USER_ID,
-                VobsDbAdapter.KEY_ROW_ID
-        };
-        int[] to = new int[] {
-                R.id.content,
-                R.id.longitude,
-                R.id.latitude,
-                R.id.user_id,
-                R.id.row_id
-        };
-
-        adapter = new SimpleCursorAdapter(getActivity(), R.layout.vob_info, cursor, columns, to, 0);
+        adapter = new VobViewCursorAdapter(getActivity(), getCursor(), 0);
 
         vobList = (ListView) getView().findViewById(R.id.vob_list);
         vobList.setAdapter(adapter);
@@ -156,10 +136,14 @@ public class MyVOBsFragment extends Fragment {
         server.refreshVobDatabase(new DyvoServerAction() {
             @Override
             public void onSuccess() {
-                adapter.changeCursor(dbHelper.fetchVobsByUser(settings.getString("uid", "")));
+                adapter.changeCursor(getCursor());
                 refreshLayout.setRefreshing(false);
             }
         });
+    }
+
+    private Cursor getCursor() {
+        return dbHelper.fetchVobsByUser(settings.getString("uid", ""));
     }
 
     @Override
