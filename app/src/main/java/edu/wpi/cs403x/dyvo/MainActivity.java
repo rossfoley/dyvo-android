@@ -1,6 +1,7 @@
 package edu.wpi.cs403x.dyvo;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -13,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.facebook.AccessToken;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 
@@ -50,6 +52,9 @@ public class MainActivity extends ActionBarActivity
         super.onCreate(savedInstanceState);
         if (!FacebookSdk.isInitialized()) {
             FacebookSdk.sdkInitialize(getApplicationContext());
+        }
+        if (AccessToken.getCurrentAccessToken() == null) {
+            startActivity(new Intent(MainActivity.this, FacebookLoginActivity.class));
         }
         setContentView(R.layout.activity_main);
 
