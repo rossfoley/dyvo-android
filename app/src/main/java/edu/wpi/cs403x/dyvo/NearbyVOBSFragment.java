@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
@@ -14,7 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
@@ -26,7 +26,16 @@ import edu.wpi.cs403x.dyvo.db.CursorAdapter;
 import edu.wpi.cs403x.dyvo.db.VobsDbAdapter;
 
 
-public class MyVOBsFragment extends Fragment {
+/**
+ * A simple {@link Fragment} subclass.
+ * Activities that contain this fragment must implement the
+ * {@link NearbyVOBSFragment.OnFragmentInteractionListener} interface
+ * to handle interaction events.
+ * Use the {@link NearbyVOBSFragment#newInstance} factory method to
+ * create an instance of this fragment.
+ */
+public class NearbyVOBSFragment extends Fragment {
+
     private static final String ARG_SECTION_NUMBER = "section_number";
     public static final String EXTRA_VOB_ID = "vob_id";
 
@@ -43,15 +52,24 @@ public class MyVOBsFragment extends Fragment {
     private VobsDbAdapter dbHelper;
     private DyvoServer server;
 
-    public static MyVOBsFragment newInstance(int sectionNumber) {
-        MyVOBsFragment fragment = new MyVOBsFragment();
+    public static NearbyVOBSFragment newInstance(int sectionNumber) {
+        NearbyVOBSFragment fragment = new NearbyVOBSFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_SECTION_NUMBER, sectionNumber);
         fragment.setArguments(args);
         return fragment;
     }
 
-    public MyVOBsFragment() {}
+    public NearbyVOBSFragment() {
+        // Required empty public constructor
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_nearby_vob, container, false);
+    }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -84,16 +102,13 @@ public class MyVOBsFragment extends Fragment {
         });
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        refreshVobDatabase();
-    }
-
     private void initializeListView() {
         // Initialize the database helper
         dbHelper = new VobsDbAdapter(getActivity());
         dbHelper.open();
+
+        Cursor cursor = dbHelper.fetchAllVobs();
+        CursorAdapter.getInstance().initialize(getActivity());
 
         adapter = CursorAdapter.getInstance().getCursorAdapter();
 
@@ -138,21 +153,15 @@ public class MyVOBsFragment extends Fragment {
     }
 
     private void refreshVobDatabase() {
-        server.refreshVobDatabase(new DyvoServerAction() {
+        server.refreshVobDatabaseDistanceBased(1, 1, 1, new DyvoServerAction() {
             @Override
             public void onSuccess() {
-                adapter.changeCursor(dbHelper.fetchVobsByUser(settings.getString("uid", "")));
+                adapter.changeCursor(dbHelper.fetchAllVobs());
                 refreshLayout.setRefreshing(false);
             }
         });
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_my_vobs, container, false);
-    }
 
     @Override
     public void onAttach(Activity activity) {
@@ -172,13 +181,6 @@ public class MyVOBsFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
-    }
-
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
     }
 
     /**

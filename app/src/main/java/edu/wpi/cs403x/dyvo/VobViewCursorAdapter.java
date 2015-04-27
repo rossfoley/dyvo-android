@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Handler;
 import android.support.v4.widget.CursorAdapter;
@@ -30,6 +31,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import edu.wpi.cs403x.dyvo.api.LocationHelper;
 import edu.wpi.cs403x.dyvo.db.VobsDbAdapter;
 
 /**
@@ -38,6 +40,7 @@ import edu.wpi.cs403x.dyvo.db.VobsDbAdapter;
 public class VobViewCursorAdapter extends CursorAdapter {
 
     private LayoutInflater mInflater;
+    public static final int MAX_CONTENT_PREVIEW_LENGTH = 32;
 
     public VobViewCursorAdapter(Context context, Cursor c, int flags) {
         super(context, c, flags);
@@ -57,10 +60,30 @@ public class VobViewCursorAdapter extends CursorAdapter {
         //Get UI Components
         final TextView contentTextView = (TextView) view.findViewById(R.id.vob_info_content);
         final TextView nameTextView = (TextView) view.findViewById(R.id.vob_info_user_name);
+        final TextView distanceTextView = (TextView) view.findViewById(R.id.vob_info_distance);
         final ImageView profileImageView = (ImageView) view.findViewById(R.id.vob_info_user_picture);
 
         //Set Content of Vob
-        contentTextView.setText(cursor.getString(cursor.getColumnIndex(VobsDbAdapter.KEY_CONTENT)));
+        String content = cursor.getString(cursor.getColumnIndex(VobsDbAdapter.KEY_CONTENT));
+        if (content.length() > MAX_CONTENT_PREVIEW_LENGTH){
+            content = content.substring(0, MAX_CONTENT_PREVIEW_LENGTH - 3) + "...";
+        }
+        contentTextView.setText(content);
+
+        //Set Lat + Long of Vob
+        double spotLat = cursor.getDouble(cursor.getColumnIndex(VobsDbAdapter.KEY_LATITUDE));
+        double spotLong = cursor.getDouble(cursor.getColumnIndex(VobsDbAdapter.KEY_LONGITUDE));
+
+        float[] distances = new float[]{0};
+        Location.distanceBetween(
+                spotLat,
+                spotLong,
+                LocationHelper.getInstance().getCurrentLat(),
+                LocationHelper.getInstance().getCurrentLong(), distances);
+
+        String latLongStr = (distances[0]) + " meters";
+        distanceTextView.setText(latLongStr);
+
 
         //Create Client to contact facebook for user details
         final AsyncHttpClient client = new AsyncHttpClient();

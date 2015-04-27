@@ -18,6 +18,9 @@ import com.facebook.AccessToken;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 
+import edu.wpi.cs403x.dyvo.api.LocationHelper;
+import edu.wpi.cs403x.dyvo.db.CursorAdapter;
+
 public class MainActivity extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
@@ -58,6 +61,10 @@ public class MainActivity extends ActionBarActivity
         }
         setContentView(R.layout.activity_main);
 
+        //Initialize helper singletons
+        LocationHelper.getInstance().initialize(this);
+        CursorAdapter.getInstance().initialize(this);
+
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
         mTitle = getTitle();
@@ -82,8 +89,8 @@ public class MainActivity extends ActionBarActivity
                 newFragment = MyVOBsFragment.newInstance(position + 1);
                 break;
             case 1:
-            case 2:
-                newFragment = PlaceholderFragment.newInstance(position + 1);
+                // Nearby VOBs section
+                newFragment = NearbyVOBSFragment.newInstance(position + 1);
                 break;
             default:
                 newFragment = PlaceholderFragment.newInstance(position + 1);

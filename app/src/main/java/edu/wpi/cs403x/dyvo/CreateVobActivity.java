@@ -21,6 +21,7 @@ import org.apache.http.Header;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import edu.wpi.cs403x.dyvo.api.LocationHelper;
 import edu.wpi.cs403x.dyvo.db.CursorAdapter;
 import edu.wpi.cs403x.dyvo.db.VobsDbAdapter;
 
@@ -95,8 +96,8 @@ public class CreateVobActivity extends ActionBarActivity {
         AsyncHttpClient client = new AsyncHttpClient();
         RequestParams params = new RequestParams();
         params.put("content", textView.getText());
-        params.put("longitude", 1);
-        params.put("latitude", 1);
+        params.put("longitude", LocationHelper.getInstance().getCurrentLong());
+        params.put("latitude", LocationHelper.getInstance().getCurrentLat());
         client.addHeader("X-User-Email", settings.getString("email", ""));
         client.addHeader("X-User-Token", settings.getString("authentication_token", ""));
 
