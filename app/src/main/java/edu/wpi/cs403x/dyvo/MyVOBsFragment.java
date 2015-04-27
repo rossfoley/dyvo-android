@@ -22,7 +22,6 @@ import com.getbase.floatingactionbutton.FloatingActionsMenu;
 
 import edu.wpi.cs403x.dyvo.api.DyvoServer;
 import edu.wpi.cs403x.dyvo.api.DyvoServerAction;
-import edu.wpi.cs403x.dyvo.db.CursorAdapter;
 import edu.wpi.cs403x.dyvo.db.VobsDbAdapter;
 
 
@@ -91,11 +90,8 @@ public class MyVOBsFragment extends Fragment {
     }
 
     private void initializeListView() {
-        // Initialize the database helper
-        dbHelper = new VobsDbAdapter(getActivity());
-        dbHelper.open();
+        adapter = new VobViewCursorAdapter(getActivity(), getCursor(), 0);
 
-        adapter = CursorAdapter.getInstance().getCursorAdapter();
 
         vobList = (ListView) getView().findViewById(R.id.vob_list);
         vobList.setAdapter(adapter);
@@ -104,7 +100,7 @@ public class MyVOBsFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Cursor cursor = (Cursor) vobList.getItemAtPosition(position);
-                String vobId = cursor.getString(cursor.getColumnIndexOrThrow(VobsDbAdapter.KEY_ROWID));
+                String vobId = cursor.getString(cursor.getColumnIndexOrThrow(VobsDbAdapter.KEY_ROW_ID));
                 Intent intent = new Intent(getActivity(), VOBDetailActivity.class);
                 intent.putExtra(EXTRA_VOB_ID, vobId);
                 startActivity(intent);
@@ -141,10 +137,14 @@ public class MyVOBsFragment extends Fragment {
         server.refreshVobDatabase(new DyvoServerAction() {
             @Override
             public void onSuccess() {
-                adapter.changeCursor(dbHelper.fetchVobsByUser(settings.getString("uid", "")));
+                adapter.changeCursor(getCursor());
                 refreshLayout.setRefreshing(false);
             }
         });
+    }
+
+    private Cursor getCursor() {
+        return dbHelper.fetchVobsByUser(settings.getString("uid", ""));
     }
 
     @Override

@@ -52,11 +52,8 @@ public class VobViewCursorAdapter extends CursorAdapter {
         return mInflater.inflate(R.layout.vob_info, parent, false);
     }
 
-
-
     @Override
     public void bindView(View view, final Context context, Cursor cursor) {
-
         //Get UI Components
         final TextView contentTextView = (TextView) view.findViewById(R.id.vob_info_content);
         final TextView nameTextView = (TextView) view.findViewById(R.id.vob_info_user_name);
@@ -91,45 +88,39 @@ public class VobViewCursorAdapter extends CursorAdapter {
         final RequestParams params = new RequestParams();
         params.put("access_token", AccessToken.getCurrentAccessToken().getToken());
 
-        final RequestHandle requestHandle = client.get(context, "https://graph.facebook.com/?ids="+ fbIdStr +"&fields=name,picture&type=large&redirect=true&width=200&height=200",  params , new JsonHttpResponseHandler() {
+        client.get(context, "https://graph.facebook.com/?ids="+ fbIdStr +"&fields=name,picture&type=large&redirect=true&width=200&height=200",  params , new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 try {
-
-                    //Extract data
+                    // Extract data
                     JSONObject fbData = response.getJSONObject(fbIdStr);
                     final String pictureURL = fbData.getJSONObject("picture").getJSONObject("data").getString("url");
                     final String name = fbData.getString("name");
 
-                    //Set Name
+                    // Set Name
                     nameTextView.setText(name);
 
-                    //Launch thread to find image
-                    Thread imgThread = new Thread(new Runnable(){
+                    // Launch thread to find image
+                    new Thread(new Runnable(){
                         @Override
                         public void run(){
-                            try {
+                        try {
+                            URL newurl = new URL(pictureURL);
+                            final Bitmap userImage = BitmapFactory.decodeStream(newurl.openConnection().getInputStream());
 
-                                URL newurl = new URL(pictureURL);
-                                final Bitmap userImage = BitmapFactory.decodeStream(newurl.openConnection().getInputStream());
-
-                                //Put image task on main thread
-                                Handler mainHandler = new Handler(context.getMainLooper());
-                                Runnable myRunnable = new Runnable(){
-                                    public void run(){
-                                        profileImageView.setImageBitmap(userImage);
-                                    }
-                                };
-                                mainHandler.post(myRunnable);
-                            } catch (MalformedURLException e){
-                                e.printStackTrace();
-                            } catch (IOException e){
-                                e.printStackTrace();
-                            }
+                            //Put image task on main thread
+                            Handler mainHandler = new Handler(context.getMainLooper());
+                            Runnable myRunnable = new Runnable(){
+                                public void run(){
+                                    profileImageView.setImageBitmap(userImage);
+                                }
+                            };
+                            mainHandler.post(myRunnable);
+                        } catch (Exception e){
+                            e.printStackTrace();
                         }
-                    });
-                    imgThread.start();
-
+                        }
+                    }).start();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

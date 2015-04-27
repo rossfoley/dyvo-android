@@ -19,7 +19,6 @@ import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 
 import edu.wpi.cs403x.dyvo.api.LocationHelper;
-import edu.wpi.cs403x.dyvo.db.CursorAdapter;
 
 public class MainActivity extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
@@ -63,7 +62,6 @@ public class MainActivity extends ActionBarActivity
 
         //Initialize helper singletons
         LocationHelper.getInstance().initialize(this);
-        CursorAdapter.getInstance().initialize(this);
 
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);

@@ -10,14 +10,14 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 public class VobsDbAdapter {
-    public static final String KEY_ROWID = "_id";
+    public static final String KEY_ROW_ID = "_id";
     public static final String KEY_LONGITUDE = "longitude";
     public static final String KEY_LATITUDE = "latitude";
     public static final String KEY_CONTENT = "content";
     public static final String KEY_USER_ID = "user_id";
-    public static final String[] ALL_COLUMNS = new String[] {KEY_ROWID, KEY_LONGITUDE, KEY_LATITUDE, KEY_CONTENT, KEY_USER_ID};
+    public static final String[] ALL_COLUMNS = new String[] {KEY_ROW_ID, KEY_LONGITUDE, KEY_LATITUDE, KEY_CONTENT, KEY_USER_ID};
 
-    private static final String TAG = "CountriesDbAdapter";
+    private static final String TAG = "VobsDbAdapter";
     private DatabaseHelper mDbHelper;
     private SQLiteDatabase mDb;
 
@@ -29,7 +29,7 @@ public class VobsDbAdapter {
 
     private static final String DATABASE_CREATE =
             "CREATE TABLE if not exists " + SQLITE_TABLE + " (" +
-                    KEY_ROWID + " INTEGER PRIMARY KEY autoincrement," +
+                    KEY_ROW_ID + " INTEGER PRIMARY KEY autoincrement," +
                     KEY_LONGITUDE + " REAL," +
                     KEY_LATITUDE + " REAL," +
                     KEY_CONTENT + " TEXT," +
@@ -103,7 +103,7 @@ public class VobsDbAdapter {
     public Cursor fetchVobById(String id) {
         Cursor cursor = mDb.query(SQLITE_TABLE,
                 ALL_COLUMNS,
-                KEY_ROWID + "=?",
+                KEY_ROW_ID + "=?",
                 new String[] {id},
                 null, null, null, null);
         if (cursor != null) {

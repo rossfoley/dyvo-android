@@ -22,7 +22,6 @@ import com.getbase.floatingactionbutton.FloatingActionsMenu;
 
 import edu.wpi.cs403x.dyvo.api.DyvoServer;
 import edu.wpi.cs403x.dyvo.api.DyvoServerAction;
-import edu.wpi.cs403x.dyvo.db.CursorAdapter;
 import edu.wpi.cs403x.dyvo.db.VobsDbAdapter;
 
 
@@ -108,9 +107,8 @@ public class NearbyVOBSFragment extends Fragment {
         dbHelper.open();
 
         Cursor cursor = dbHelper.fetchAllVobs();
-        CursorAdapter.getInstance().initialize(getActivity());
 
-        adapter = CursorAdapter.getInstance().getCursorAdapter();
+        adapter = new VobViewCursorAdapter(getActivity(), cursor, 0);
 
         vobList = (ListView) getView().findViewById(R.id.vob_list);
         vobList.setAdapter(adapter);
@@ -119,7 +117,7 @@ public class NearbyVOBSFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Cursor cursor = (Cursor) vobList.getItemAtPosition(position);
-                String vobId = cursor.getString(cursor.getColumnIndexOrThrow(VobsDbAdapter.KEY_ROWID));
+                String vobId = cursor.getString(cursor.getColumnIndexOrThrow(VobsDbAdapter.KEY_ROW_ID));
                 Intent intent = new Intent(getActivity(), VOBDetailActivity.class);
                 intent.putExtra(EXTRA_VOB_ID, vobId);
                 startActivity(intent);
