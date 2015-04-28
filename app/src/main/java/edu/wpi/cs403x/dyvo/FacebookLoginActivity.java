@@ -1,8 +1,10 @@
 package edu.wpi.cs403x.dyvo;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -28,7 +30,7 @@ import org.json.JSONObject;
 import java.util.Arrays;
 
 
-public class FacebookLoginActivity extends ActionBarActivity {
+public class FacebookLoginActivity extends Activity {
     public static final String PREFS_NAME = "LoginPrefs";
 
     CallbackManager callbackManager;

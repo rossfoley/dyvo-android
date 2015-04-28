@@ -14,7 +14,8 @@
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:background="#cccc">
 
             <ImageView
                 android:layout_width="100dp"
@@ -22,7 +23,8 @@
                 android:id="@+id/vob_detail_profile"
                 android:paddingTop="4dp"
                 android:paddingBottom="4dp"
-                android:paddingRight="4dp"/>
+                android:paddingRight="4dp"
+                android:paddingLeft="4dp"/>
 
             <LinearLayout
                 android:orientation="vertical"
@@ -33,6 +35,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textStyle="bold"
                     android:text="USER NAME"
                     android:id="@+id/vob_detail_user_name" />
 
@@ -45,10 +48,32 @@
             </LinearLayout>
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/vob_content"
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_height="wrap_content"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content" />
+            android:minHeight="50dp"
+            android:layout_marginTop="10dp"
+            android:background="#cccc">
+            <TextView
+                android:id="@+id/vob_content"
+                android:paddingLeft="4dp"
+                android:paddingRight="4dp"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/vob_detail_map"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:name="com.google.android.gms.maps.MapFragment"
+            android:layout_marginBottom="1dp"
+            android:layout_marginRight="0dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="0dp" />
+
+
 
     </LinearLayout>
 

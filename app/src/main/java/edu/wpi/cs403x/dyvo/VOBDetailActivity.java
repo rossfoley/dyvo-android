@@ -13,8 +13,15 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+
 import edu.wpi.cs403x.dyvo.api.FaceBookHelper;
 import edu.wpi.cs403x.dyvo.api.FaceBookHelperAction;
+import edu.wpi.cs403x.dyvo.api.LocationHelper;
 import edu.wpi.cs403x.dyvo.db.VobsDbAdapter;
 
 
@@ -25,6 +32,8 @@ public class VOBDetailActivity extends ActionBarActivity {
 
     private TextView nameView;
     private ImageView profileView;
+    private MapFragment mapFragment;
+    private GoogleMap googleMap;
 
 
     @Override
@@ -56,6 +65,20 @@ public class VOBDetailActivity extends ActionBarActivity {
         // Get UI elements
         nameView = (TextView) findViewById(R.id.vob_detail_user_name);
         profileView = (ImageView) findViewById(R.id.vob_detail_profile);
+
+        // Setup Map
+        mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.vob_detail_map);
+        googleMap = mapFragment.getMap();
+        double sLat = vob.getDouble(vob.getColumnIndexOrThrow(VobsDbAdapter.KEY_LATITUDE));
+        double sLong = vob.getDouble(vob.getColumnIndexOrThrow(VobsDbAdapter.KEY_LONGITUDE));
+        LatLng latLng = new LatLng(sLat, sLong);
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
+        googleMap.addMarker(new MarkerOptions()
+                .position(latLng)
+                .title("VOB")
+                .flat(false)
+                );
+        googleMap.setMyLocationEnabled(true);
 
         // Do Facebook info
         String fbIdStr = vob.getString(vob.getColumnIndexOrThrow(VobsDbAdapter.KEY_USER_ID));
