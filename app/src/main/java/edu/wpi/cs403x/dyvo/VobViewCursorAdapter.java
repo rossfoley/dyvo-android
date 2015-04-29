@@ -1,36 +1,18 @@
 package edu.wpi.cs403x.dyvo;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.location.Location;
-import android.net.Uri;
-import android.os.Handler;
 import android.support.v4.widget.CursorAdapter;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
+import com.google.android.gms.maps.model.LatLng;
 
-import com.facebook.AccessToken;
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.JsonHttpResponseHandler;
-import com.loopj.android.http.RequestHandle;
-import com.loopj.android.http.RequestParams;
-
-import org.apache.http.Header;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-
+import edu.wpi.cs403x.dyvo.api.FaceBookHelper;
+import edu.wpi.cs403x.dyvo.api.FaceBookHelperAction;
 import edu.wpi.cs403x.dyvo.api.LocationHelper;
 import edu.wpi.cs403x.dyvo.db.VobsDbAdapter;
 
@@ -53,7 +35,7 @@ public class VobViewCursorAdapter extends CursorAdapter {
     }
 
     @Override
-    public void bindView(View view, final Context context, Cursor cursor) {
+    public void bindView(View view, final Context ctx, Cursor cursor) {
         //Get UI Components
         final TextView contentTextView = (TextView) view.findViewById(R.id.vob_info_content);
         final TextView nameTextView = (TextView) view.findViewById(R.id.vob_info_user_name);
@@ -68,70 +50,27 @@ public class VobViewCursorAdapter extends CursorAdapter {
         contentTextView.setText(content);
 
         //Set Lat + Long of Vob
-        double spotLat = cursor.getDouble(cursor.getColumnIndex(VobsDbAdapter.KEY_LATITUDE));
-        double spotLong = cursor.getDouble(cursor.getColumnIndex(VobsDbAdapter.KEY_LONGITUDE));
+        float spotLat = cursor.getFloat(cursor.getColumnIndex(VobsDbAdapter.KEY_LATITUDE));
+        float spotLong = cursor.getFloat(cursor.getColumnIndex(VobsDbAdapter.KEY_LONGITUDE));
 
-        float[] distances = new float[]{0};
-        Location.distanceBetween(
-                spotLat,
-                spotLong,
-                LocationHelper.getInstance().getCurrentLat(),
-                LocationHelper.getInstance().getCurrentLong(), distances);
-
-        String latLongStr = (distances[0]) + " meters";
+        String latLongStr = LocationHelper.getInstance().getDistanceToAsText(new LatLng(spotLat, spotLong));
         distanceTextView.setText(latLongStr);
 
-
-        //Create Client to contact facebook for user details
-        final AsyncHttpClient client = new AsyncHttpClient();
+        FaceBookHelper fb = new FaceBookHelper();
         final String fbIdStr = cursor.getString(cursor.getColumnIndex(VobsDbAdapter.KEY_USER_ID));
-        final RequestParams params = new RequestParams();
-        params.put("access_token", AccessToken.getCurrentAccessToken().getToken());
-
-        client.get(context, "https://graph.facebook.com/?ids="+ fbIdStr +"&fields=name,picture&type=large&redirect=true&width=200&height=200",  params , new JsonHttpResponseHandler() {
+        fb.requestFaceBookDetails(ctx, fbIdStr, new FaceBookHelperAction() {
             @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                try {
-                    // Extract data
-                    JSONObject fbData = response.getJSONObject(fbIdStr);
-                    final String pictureURL = fbData.getJSONObject("picture").getJSONObject("data").getString("url");
-                    final String name = fbData.getString("name");
-
-                    // Set Name
-                    nameTextView.setText(name);
-
-                    // Launch thread to find image
-                    new Thread(new Runnable(){
-                        @Override
-                        public void run(){
-                        try {
-                            URL newurl = new URL(pictureURL);
-                            final Bitmap userImage = BitmapFactory.decodeStream(newurl.openConnection().getInputStream());
-
-                            //Put image task on main thread
-                            Handler mainHandler = new Handler(context.getMainLooper());
-                            Runnable myRunnable = new Runnable(){
-                                public void run(){
-                                    profileImageView.setImageBitmap(userImage);
-                                }
-                            };
-                            mainHandler.post(myRunnable);
-                        } catch (Exception e){
-                            e.printStackTrace();
-                        }
-                        }
-                    }).start();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+            public void onSuccess(String name, Bitmap bitmap) {
+                nameTextView.setText(name);
+                profileImageView.setImageBitmap(bitmap);
             }
 
             @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject response) {
-                String message = "Failed to reach facebook.  Error code: " + statusCode;
-                Toast.makeText(context, message, Toast.LENGTH_LONG).show();
+            public void onFailure() {
+
             }
         });
-
     }
+
+
 }

@@ -30,4 +30,5 @@
     <string name="drop_text">Drop</string>
     <string name="default_user_name">Large Text</string>
     <string name="default_content">Content</string>
+    <string name="vob_detail_center_on_vob_text">Center on VOB</string>
 </resources>

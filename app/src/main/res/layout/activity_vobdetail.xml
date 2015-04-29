@@ -45,6 +45,14 @@
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:text="TIME"
                     android:id="@+id/vob_detail_time" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="DISTANCE"
+                    android:textStyle="italic"
+                    android:id="@+id/vob_detail_distance" />
             </LinearLayout>
         </LinearLayout>
 
@@ -57,21 +65,38 @@
             android:background="#cccc">
             <TextView
                 android:id="@+id/vob_content"
-                android:paddingLeft="4dp"
-                android:paddingRight="4dp"
+                android:padding="10dp"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content" />
         </LinearLayout>
 
-        <fragment xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/vob_detail_map"
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_height="match_parent"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:name="com.google.android.gms.maps.MapFragment"
-            android:layout_marginBottom="1dp"
-            android:layout_marginRight="0dp"
+            android:minHeight="50dp"
             android:layout_marginTop="10dp"
-            android:layout_marginLeft="0dp" />
+            android:padding="10dp"
+            android:background="#cccc"
+
+            android:weightSum="1">
+            <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/vob_detail_map"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:name="com.google.android.gms.maps.MapFragment"
+                android:layout_weight="0.88" />
+
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="@string/vob_detail_center_on_vob_text"
+                android:id="@+id/vob_detail_center_btn"
+                android:background="#fff5cffd"/>
+
+
+        </LinearLayout>
 
 
 

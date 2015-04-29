@@ -4,12 +4,15 @@ package edu.wpi.cs403x.dyvo;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.location.Location;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -29,9 +32,12 @@ public class VOBDetailActivity extends ActionBarActivity {
     private Cursor vob;
 
     private VobsDbAdapter dbHelper;
-
+    private LatLng latLng;
     private TextView nameView;
+    private TextView distanceView;
+    private TextView timeView;
     private ImageView profileView;
+    private Button centerBtn;
     private MapFragment mapFragment;
     private GoogleMap googleMap;
 
@@ -65,20 +71,27 @@ public class VOBDetailActivity extends ActionBarActivity {
         // Get UI elements
         nameView = (TextView) findViewById(R.id.vob_detail_user_name);
         profileView = (ImageView) findViewById(R.id.vob_detail_profile);
+        distanceView = (TextView) findViewById(R.id.vob_detail_distance);
+        timeView = (TextView) findViewById(R.id.vob_detail_time);
+        centerBtn = (Button) findViewById(R.id.vob_detail_center_btn);
 
-        // Setup Map
+        // Setup Map and Related info
         mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.vob_detail_map);
         googleMap = mapFragment.getMap();
         double sLat = vob.getDouble(vob.getColumnIndexOrThrow(VobsDbAdapter.KEY_LATITUDE));
         double sLong = vob.getDouble(vob.getColumnIndexOrThrow(VobsDbAdapter.KEY_LONGITUDE));
-        LatLng latLng = new LatLng(sLat, sLong);
+        latLng = new LatLng(sLat, sLong);
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
         googleMap.addMarker(new MarkerOptions()
                 .position(latLng)
-                .title("VOB")
-                .flat(false)
-                );
+                .title("VOB"));
         googleMap.setMyLocationEnabled(true);
+
+        String distanceStr = LocationHelper.getInstance().getDistanceToAsText(latLng);
+        distanceView.setText(distanceStr);
+
+        String timeStr = vob.getString(vob.getColumnIndex(VobsDbAdapter.KEY_CREATED_AT));
+        timeView.setText(timeStr);
 
         // Do Facebook info
         String fbIdStr = vob.getString(vob.getColumnIndexOrThrow(VobsDbAdapter.KEY_USER_ID));
@@ -92,6 +105,14 @@ public class VOBDetailActivity extends ActionBarActivity {
             @Override
             public void onFailure() {
                 //do nothing, no facebook available
+            }
+        });
+
+        // Add center button behavour
+        centerBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
             }
         });
     }

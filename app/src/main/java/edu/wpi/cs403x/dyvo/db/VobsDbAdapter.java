@@ -15,7 +15,8 @@ public class VobsDbAdapter {
     public static final String KEY_LATITUDE = "latitude";
     public static final String KEY_CONTENT = "content";
     public static final String KEY_USER_ID = "user_id";
-    public static final String[] ALL_COLUMNS = new String[] {KEY_ROW_ID, KEY_LONGITUDE, KEY_LATITUDE, KEY_CONTENT, KEY_USER_ID};
+    public static final String KEY_CREATED_AT = "created_at";
+    public static final String[] ALL_COLUMNS = new String[] {KEY_ROW_ID, KEY_LONGITUDE, KEY_LATITUDE, KEY_CONTENT, KEY_USER_ID, KEY_CREATED_AT};
 
     private static final String TAG = "VobsDbAdapter";
     private DatabaseHelper mDbHelper;
@@ -33,7 +34,8 @@ public class VobsDbAdapter {
                     KEY_LONGITUDE + " REAL," +
                     KEY_LATITUDE + " REAL," +
                     KEY_CONTENT + " TEXT," +
-                    KEY_USER_ID + " TEXT);";
+                    KEY_USER_ID + " TEXT," +
+                    KEY_CREATED_AT + " TEXT);";
 
     private static class DatabaseHelper extends SQLiteOpenHelper {
 
@@ -79,7 +81,7 @@ public class VobsDbAdapter {
         initialValues.put(KEY_LATITUDE, latitude);
         initialValues.put(KEY_CONTENT, content);
         initialValues.put(KEY_USER_ID, userId);
-
+       // initialValues.put(KEY_CREATED_AT, "");
         return mDb.insert(SQLITE_TABLE, null, initialValues);
     }
 

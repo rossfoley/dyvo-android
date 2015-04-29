@@ -94,8 +94,8 @@ public class CreateVobActivity extends ActionBarActivity {
         AsyncHttpClient client = new AsyncHttpClient();
         RequestParams params = new RequestParams();
         params.put("content", textView.getText());
-        params.put("longitude", LocationHelper.getInstance().getCurrentLong());
-        params.put("latitude", LocationHelper.getInstance().getCurrentLat());
+        params.put("longitude", LocationHelper.getInstance().getLocation().getLongitude());
+        params.put("latitude", LocationHelper.getInstance().getLocation().getLatitude());
         client.addHeader("X-User-Email", settings.getString("email", ""));
         client.addHeader("X-User-Token", settings.getString("authentication_token", ""));
 

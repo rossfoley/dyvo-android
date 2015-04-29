@@ -27,6 +27,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
+            android:launchMode="singleTop"
             android:name=".MainActivity"
             android:label="@string/app_name" >
 
@@ -53,7 +54,9 @@
             android:value="@integer/google_play_services_version" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyCt0bv3vDlkOsl8pVffph5wWF87wZjiMqw" />
+
+            android:value="AIzaSyBv47i4yYVCE2hFItCY2MT76WA6oRQybOA" />
+            <!--OLD KEY. This key was causing several internal errors. AIzaSyCt0bv3vDlkOsl8pVffph5wWF87wZjiMqw-->
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/app_id" />
@@ -64,7 +67,7 @@
         <activity
             android:name=".VOBDetailActivity"
             android:label="@string/title_activity_vobdetail"
-            android:parentActivityName=".MainActivity" >
+            android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="edu.wpi.cs403x.dyvo.MainActivity" />
