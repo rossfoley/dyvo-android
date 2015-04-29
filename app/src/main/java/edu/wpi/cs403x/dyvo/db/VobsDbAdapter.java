@@ -76,18 +76,19 @@ public class VobsDbAdapter {
         }
     }
 
-    public long createVob(String content, String userId, float longitude, float latitude, int nearby) {
+    public long createVob(String content, String userId, float longitude, float latitude, String createdAt, int nearby ) {
         ContentValues initialValues = new ContentValues();
         initialValues.put(KEY_LONGITUDE, longitude);
         initialValues.put(KEY_LATITUDE, latitude);
         initialValues.put(KEY_CONTENT, content);
         initialValues.put(KEY_USER_ID, userId);
+        initialValues.put(KEY_CREATED_AT, createdAt);
         initialValues.put(KEY_NEARBY, nearby);
         return mDb.insert(SQLITE_TABLE, null, initialValues);
     }
 
-    public long createVob(String content, String userId, float longitude, float latitude) {
-        return createVob(content, userId, longitude, latitude, 0);
+    public long createVob(String content, String userId, float longitude, float latitude, String createdAt) {
+        return createVob(content, userId, longitude, latitude, createdAt, 0);
     }
 
     public boolean deleteAllVobs() {

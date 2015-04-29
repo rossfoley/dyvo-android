@@ -47,6 +47,8 @@ public class LocationHelper {
         }
     }
 
+
+
     public float getDistanceTo(LatLng latLng){
         float[] answer = new float[]{0};
         Location current = getLocation();

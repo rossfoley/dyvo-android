@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -23,6 +24,7 @@ import com.getbase.floatingactionbutton.FloatingActionsMenu;
 
 import edu.wpi.cs403x.dyvo.api.DyvoServer;
 import edu.wpi.cs403x.dyvo.api.DyvoServerAction;
+import edu.wpi.cs403x.dyvo.api.LocationHelper;
 import edu.wpi.cs403x.dyvo.db.VobsDbAdapter;
 
 
@@ -138,7 +140,8 @@ public class NearbyVOBSFragment extends Fragment {
     }
 
     private void refreshVobDatabase() {
-        server.refreshVobDatabaseDistanceBased(1, 1, 1, new DyvoServerAction() {
+        Location loc = LocationHelper.getInstance().getLocation();
+        server.refreshVobDatabaseDistanceBased(loc.getLatitude(), loc.getLongitude(), .5, new DyvoServerAction() {
             @Override
             public void onSuccess() {
                 adapter.changeCursor(dbHelper.fetchNearbyVobs());

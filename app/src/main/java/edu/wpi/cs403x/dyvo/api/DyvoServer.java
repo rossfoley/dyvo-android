@@ -1,6 +1,7 @@
 package edu.wpi.cs403x.dyvo.api;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -10,6 +11,9 @@ import org.apache.http.Header;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.sql.Time;
+import java.util.TimeZone;
 
 import edu.wpi.cs403x.dyvo.db.VobsDbAdapter;
 
@@ -26,7 +30,7 @@ public class DyvoServer {
         client.addHeader("X-User-Token", authentication_token);
     }
 
-    public void refreshVobDatabaseDistanceBased(int latitude, int longitude, int distance, final DyvoServerAction action) {
+    public void refreshVobDatabaseDistanceBased(double latitude, double longitude, double distance, final DyvoServerAction action) {
         RequestParams params = new RequestParams();
         params.put("latitude", latitude);
         params.put("longitude", longitude);
@@ -45,7 +49,8 @@ public class DyvoServer {
                         float longitude = (float) vob.getJSONArray("location").getDouble(0);
                         float latitude = (float) vob.getJSONArray("location").getDouble(1);
                         int nearby = vob.getInt("nearby");
-                        db.createVob(content, userId, longitude, latitude, nearby);
+                        String createdAt = vob.getString("created_at");
+                        db.createVob(content, userId, longitude, latitude, createdAt, nearby);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -71,9 +76,10 @@ public class DyvoServer {
                         JSONObject vob = data.getJSONObject(i);
                         String content = vob.getString("content");
                         String userId = vob.getString("user_id");
+                        String createdAt = vob.getString("created_at");
                         float longitude = (float) vob.getJSONArray("location").getDouble(0);
                         float latitude = (float) vob.getJSONArray("location").getDouble(1);
-                        db.createVob(content, userId, longitude, latitude);
+                        db.createVob(content, userId, longitude, latitude, createdAt);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();

@@ -11,6 +11,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.google.android.gms.maps.model.LatLng;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
+
 import edu.wpi.cs403x.dyvo.api.FaceBookHelper;
 import edu.wpi.cs403x.dyvo.api.FaceBookHelperAction;
 import edu.wpi.cs403x.dyvo.api.LocationHelper;
@@ -41,13 +47,18 @@ public class VobViewCursorAdapter extends CursorAdapter {
         final TextView nameTextView = (TextView) view.findViewById(R.id.vob_info_user_name);
         final TextView distanceTextView = (TextView) view.findViewById(R.id.vob_info_distance);
         final ImageView profileImageView = (ImageView) view.findViewById(R.id.vob_info_user_picture);
-
+        final TextView timeView = (TextView) view.findViewById(R.id.vob_info_time);
         //Set Content of Vob
         String content = cursor.getString(cursor.getColumnIndex(VobsDbAdapter.KEY_CONTENT));
         if (content.length() > MAX_CONTENT_PREVIEW_LENGTH){
             content = content.substring(0, MAX_CONTENT_PREVIEW_LENGTH - 3) + "...";
         }
         contentTextView.setText(content);
+
+        //Set Time of Vob
+        String timeStr = cursor.getString(cursor.getColumnIndex(VobsDbAdapter.KEY_CREATED_AT));
+        timeStr = getTimeDisplay(timeStr);
+        timeView.setText(timeStr);
 
         //Set Lat + Long of Vob
         float spotLat = cursor.getFloat(cursor.getColumnIndex(VobsDbAdapter.KEY_LATITUDE));
@@ -70,6 +81,23 @@ public class VobViewCursorAdapter extends CursorAdapter {
 
             }
         });
+    }
+
+    private String getTimeDisplay(String timeStr){
+
+        DateFormat parser = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        DateFormat formatter = new SimpleDateFormat("M/d/yy' - 'h:mm a");
+        try {
+            Date d = parser.parse(timeStr);
+            int offset = TimeZone.getDefault().getOffset(new Date().getTime());
+            d.setTime(d.getTime() + offset);
+
+            String output = formatter.format(d);
+            timeStr = output;
+        } catch (ParseException e){
+            e.printStackTrace();
+        }
+        return timeStr;
     }
 
 

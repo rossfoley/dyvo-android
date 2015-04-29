@@ -6,18 +6,27 @@
     android:padding="6dip" >
 
     <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="#555555"
+        android:layout_marginBottom="2dp">
+
+
+
+    <LinearLayout
         android:orientation="horizontal"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true">
+        android:layout_alignParentStart="true"
+        android:background="#FFFFFF">
 
         <ImageView
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:id="@+id/vob_info_user_picture"
             android:contentDescription="profile_picture"
-            android:paddingRight="5dp"/>
+            android:padding="5dp"/>
 
         <LinearLayout
             android:orientation="vertical"
@@ -41,25 +50,33 @@
 
                 android:id="@+id/vob_info_content" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="Small Text"
-                android:id="@+id/vob_info_distance"
-                android:layout_gravity="end"
-                android:layout_centerVertical="true"
-                android:layout_alignParentEnd="true" />
 
-            <LinearLayout
+            <RelativeLayout
                 android:orientation="horizontal"
-                android:layout_width="match_parent"
+                android:layout_width="fill_parent"
                 android:layout_height="match_parent">
 
-            </LinearLayout>
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="Small Text"
+                    android:id="@+id/vob_info_time"
+                    android:layout_alignParentLeft="true"
+                     />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="Small Text"
+                    android:id="@+id/vob_info_distance"
+                    android:layout_alignParentRight="true"
+                    />
+
+            </RelativeLayout >
         </LinearLayout>
-
     </LinearLayout>
-
+    </LinearLayout>
 </RelativeLayout>

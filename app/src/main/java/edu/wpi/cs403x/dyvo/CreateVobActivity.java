@@ -108,7 +108,7 @@ public class CreateVobActivity extends ActionBarActivity {
                     String userId = vob.getString("user_id");
                     float longitude = (float) vob.getJSONArray("location").getDouble(0);
                     float latitude = (float) vob.getJSONArray("location").getDouble(1);
-                    dbHelper.createVob(content, userId, longitude, latitude);
+                    dbHelper.createVob(content, userId, longitude, latitude, "");
                     finish();
                 } catch (JSONException e) {
                     e.printStackTrace();
