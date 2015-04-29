@@ -17,6 +17,7 @@ import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
 
+import com.getbase.floatingactionbutton.AddFloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 
@@ -33,9 +34,7 @@ public class MyVOBsFragment extends Fragment {
 
     private ListView vobList;
     private SwipeRefreshLayout refreshLayout;
-    private FloatingActionsMenu actionMenu;
-    private FloatingActionButton addTextVOBButton;
-    private FloatingActionButton addPictureVOBButton;
+    private AddFloatingActionButton addTextVOBButton;
 
     private SharedPreferences settings;
     private VobViewCursorAdapter adapter;
@@ -108,28 +107,16 @@ public class MyVOBsFragment extends Fragment {
     }
 
     private void initializeActionMenu() {
-        // Initialize floating action menu items
-        actionMenu = (FloatingActionsMenu) getView().findViewById(R.id.add_vob_menu);
-        addTextVOBButton = (FloatingActionButton) getView().findViewById(R.id.add_text_vob);
-        addPictureVOBButton = (FloatingActionButton) getView().findViewById(R.id.add_picture_vob);
+        // Initialize floating action button
+        addTextVOBButton = (AddFloatingActionButton) getView().findViewById(R.id.add_vob_button);
 
         addTextVOBButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), CreateVobActivity.class);
-                startActivity(intent);
-                actionMenu.collapse();
+            startActivity(new Intent(getActivity(), CreateVobActivity.class));
             }
         });
 
-        addPictureVOBButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getActivity(), "Add Picture VOB Clicked!", Toast.LENGTH_SHORT).show();
-                actionMenu.collapse();
-            }
-
-        });
     }
 
     private void refreshVobDatabase() {

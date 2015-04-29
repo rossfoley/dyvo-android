@@ -17,6 +17,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.getbase.floatingactionbutton.AddFloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 
@@ -42,9 +43,7 @@ public class NearbyVOBSFragment extends Fragment {
 
     private ListView vobList;
     private SwipeRefreshLayout refreshLayout;
-    private FloatingActionsMenu actionMenu;
-    private FloatingActionButton addTextVOBButton;
-    private FloatingActionButton addPictureVOBButton;
+    private AddFloatingActionButton addTextVOBButton;
 
     private SharedPreferences settings;
     private VobViewCursorAdapter adapter;
@@ -116,38 +115,26 @@ public class NearbyVOBSFragment extends Fragment {
         vobList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Cursor cursor = (Cursor) vobList.getItemAtPosition(position);
-                String vobId = cursor.getString(cursor.getColumnIndexOrThrow(VobsDbAdapter.KEY_ROW_ID));
-                Intent intent = new Intent(getActivity(), VOBDetailActivity.class);
-                intent.putExtra(EXTRA_VOB_ID, vobId);
-                startActivity(intent);
+            Cursor cursor = (Cursor) vobList.getItemAtPosition(position);
+            String vobId = cursor.getString(cursor.getColumnIndexOrThrow(VobsDbAdapter.KEY_ROW_ID));
+            Intent intent = new Intent(getActivity(), VOBDetailActivity.class);
+            intent.putExtra(EXTRA_VOB_ID, vobId);
+            startActivity(intent);
             }
         });
     }
 
     private void initializeActionMenu() {
-        // Initialize floating action menu items
-        actionMenu = (FloatingActionsMenu) getView().findViewById(R.id.add_vob_menu);
-        addTextVOBButton = (FloatingActionButton) getView().findViewById(R.id.add_text_vob);
-        addPictureVOBButton = (FloatingActionButton) getView().findViewById(R.id.add_picture_vob);
+        // Initialize floating action button
+        addTextVOBButton = (AddFloatingActionButton) getView().findViewById(R.id.add_vob_button);
 
         addTextVOBButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), CreateVobActivity.class);
-                startActivity(intent);
-                actionMenu.collapse();
+            startActivity(new Intent(getActivity(), CreateVobActivity.class));
             }
         });
 
-        addPictureVOBButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getActivity(), "Add Picture VOB Clicked!", Toast.LENGTH_SHORT).show();
-                actionMenu.collapse();
-            }
-
-        });
     }
 
     private void refreshVobDatabase() {
