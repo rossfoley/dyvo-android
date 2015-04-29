@@ -16,7 +16,8 @@ public class VobsDbAdapter {
     public static final String KEY_CONTENT = "content";
     public static final String KEY_USER_ID = "user_id";
     public static final String KEY_CREATED_AT = "created_at";
-    public static final String[] ALL_COLUMNS = new String[] {KEY_ROW_ID, KEY_LONGITUDE, KEY_LATITUDE, KEY_CONTENT, KEY_USER_ID, KEY_CREATED_AT};
+    public static final String KEY_NEARBY = "nearby";
+    public static final String[] ALL_COLUMNS = new String[] {KEY_ROW_ID, KEY_LONGITUDE, KEY_LATITUDE, KEY_CONTENT, KEY_USER_ID, KEY_CREATED_AT, KEY_NEARBY};
 
     private static final String TAG = "VobsDbAdapter";
     private DatabaseHelper mDbHelper;
@@ -24,7 +25,7 @@ public class VobsDbAdapter {
 
     private static final String DATABASE_NAME = "Dyvo";
     private static final String SQLITE_TABLE = "Vob";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     private final Context mCtx;
 
@@ -35,14 +36,14 @@ public class VobsDbAdapter {
                     KEY_LATITUDE + " REAL," +
                     KEY_CONTENT + " TEXT," +
                     KEY_USER_ID + " TEXT," +
-                    KEY_CREATED_AT + " TEXT);";
+                    KEY_CREATED_AT + " TEXT," +
+                    KEY_NEARBY + " INTEGER);";
+
 
     private static class DatabaseHelper extends SQLiteOpenHelper {
-
         DatabaseHelper(Context context) {
             super(context, DATABASE_NAME, null, DATABASE_VERSION);
         }
-
 
         @Override
         public void onCreate(SQLiteDatabase db) {
@@ -81,6 +82,7 @@ public class VobsDbAdapter {
         initialValues.put(KEY_LATITUDE, latitude);
         initialValues.put(KEY_CONTENT, content);
         initialValues.put(KEY_USER_ID, userId);
+        initialValues.put(KEY_NEARBY, 0);
        // initialValues.put(KEY_CREATED_AT, "");
         return mDb.insert(SQLITE_TABLE, null, initialValues);
     }

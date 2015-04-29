@@ -38,7 +38,7 @@ public class DyvoServer {
         params.put("longitude", longitude);
         params.put("distance", distance);
 
-        client.get(ctx, "http://dyvo.herokuapp.com/api/vobs", params, new JsonHttpResponseHandler() {
+        client.get(ctx, "http://dyvo.herokuapp.com/api/vobs/within", params, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 try {

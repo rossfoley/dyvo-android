@@ -15,9 +15,6 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-/**
- * Created by cdhan_000 on 4/26/2015.
- */
 public class LocationHelper {
 
     public LocationManager locationManager;
@@ -39,9 +36,8 @@ public class LocationHelper {
     private Location loc;
     private boolean initialized = false;
 
-    private LocationHelper(){
+    private LocationHelper() {
         latlng = new LatLng(0, 0);
-
     }
 
     public void initialize(final Context ctx){
