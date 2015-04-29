@@ -154,7 +154,7 @@ public class NearbyVOBSFragment extends Fragment {
         server.refreshVobDatabaseDistanceBased(1, 1, 1, new DyvoServerAction() {
             @Override
             public void onSuccess() {
-                adapter.changeCursor(dbHelper.fetchAllVobs());
+                adapter.changeCursor(dbHelper.fetchNearbyVobs());
                 refreshLayout.setRefreshing(false);
             }
         });

@@ -76,15 +76,18 @@ public class VobsDbAdapter {
         }
     }
 
-    public long createVob(String content, String userId, float longitude, float latitude) {
+    public long createVob(String content, String userId, float longitude, float latitude, int nearby) {
         ContentValues initialValues = new ContentValues();
         initialValues.put(KEY_LONGITUDE, longitude);
         initialValues.put(KEY_LATITUDE, latitude);
         initialValues.put(KEY_CONTENT, content);
         initialValues.put(KEY_USER_ID, userId);
-        initialValues.put(KEY_NEARBY, 0);
-       // initialValues.put(KEY_CREATED_AT, "");
+        initialValues.put(KEY_NEARBY, nearby);
         return mDb.insert(SQLITE_TABLE, null, initialValues);
+    }
+
+    public long createVob(String content, String userId, float longitude, float latitude) {
+        return createVob(content, userId, longitude, latitude, 0);
     }
 
     public boolean deleteAllVobs() {
@@ -122,6 +125,18 @@ public class VobsDbAdapter {
                 ALL_COLUMNS,
                 KEY_USER_ID + "=?",
                 new String[] {uid},
+                null, null, null, null);
+        if (cursor != null) {
+            cursor.moveToFirst();
+        }
+
+        return cursor;
+    }
+
+    public Cursor fetchNearbyVobs() {
+        Cursor cursor = mDb.query(SQLITE_TABLE,
+                ALL_COLUMNS,
+                KEY_NEARBY + "=1",
                 null, null, null, null);
         if (cursor != null) {
             cursor.moveToFirst();
