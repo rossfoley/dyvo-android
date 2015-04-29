@@ -106,7 +106,7 @@ public class NearbyVOBSFragment extends Fragment {
         dbHelper = new VobsDbAdapter(getActivity());
         dbHelper.open();
 
-        Cursor cursor = dbHelper.fetchAllVobs();
+        Cursor cursor = dbHelper.fetchNearbyVobs();
 
         adapter = new VobViewCursorAdapter(getActivity(), cursor, 0);
 
