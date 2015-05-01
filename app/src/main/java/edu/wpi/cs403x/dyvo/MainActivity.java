@@ -1,6 +1,7 @@
 package edu.wpi.cs403x.dyvo;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -18,6 +19,7 @@ import android.view.ViewGroup;
 import com.facebook.AccessToken;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
+import com.facebook.login.LoginManager;
 
 import edu.wpi.cs403x.dyvo.api.LocationHelper;
 
@@ -140,9 +142,17 @@ public class MainActivity extends ActionBarActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (id){
+            case R.id.action_logout:
+                Intent intent = new Intent(MainActivity.this, FacebookLoginActivity.class);
+
+                LoginManager.getInstance().logOut();
+                startActivity(intent);
+                break;
+            case R.id.action_settings:
+                break;
+            default:
+                break;
         }
 
         return super.onOptionsItemSelected(item);

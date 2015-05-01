@@ -1,6 +1,7 @@
 package edu.wpi.cs403x.dyvo;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -9,6 +10,8 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.Window;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
@@ -35,10 +38,12 @@ public class FacebookLoginActivity extends Activity {
 
     CallbackManager callbackManager;
     SharedPreferences settings;
-
+    ProgressDialog progDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
         FacebookSdk.sdkInitialize(getApplicationContext());
         callbackManager = CallbackManager.Factory.create();
         settings = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
@@ -48,13 +53,20 @@ public class FacebookLoginActivity extends Activity {
         final LoginButton loginButton = (LoginButton) findViewById(R.id.login_button);
         loginButton.setReadPermissions(Arrays.asList("public_profile","email","user_friends"));
 
+        final FacebookLoginActivity self = this;
+        loginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (AccessToken.getCurrentAccessToken() == null) {
+                    progDialog = ProgressDialog.show(self, "Logging in",
+                            "Please sit tight", true);
+                }
+            }
+        });
         // Callback registration
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-
-
-
                 loginToServer();
             }
 
@@ -76,9 +88,6 @@ public class FacebookLoginActivity extends Activity {
     }
 
     public void loginToServer() {
-        // TODO: change to a spinning wheel instead of a toast
-        Toast.makeText(getApplicationContext(), "Logging into Dyvo servers...", Toast.LENGTH_SHORT).show();
-
         // Perform the Login
         AsyncHttpClient client = new AsyncHttpClient();
         RequestParams params = new RequestParams();
@@ -94,6 +103,9 @@ public class FacebookLoginActivity extends Activity {
                     editor.putString("email", data.getString("email"));
                     editor.putString("uid", data.getString("uid"));
                     editor.apply();
+                    if (progDialog != null) {
+                        progDialog.dismiss();
+                    }
                     startActivity(new Intent(FacebookLoginActivity.this, MainActivity.class));
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -114,7 +126,12 @@ public class FacebookLoginActivity extends Activity {
         callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
-
+    @Override
+    public void onBackPressed() {
+        if (AccessToken.getCurrentAccessToken() != null) {
+            super.onBackPressed();
+        }
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.

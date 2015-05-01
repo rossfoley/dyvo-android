@@ -14,13 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
-import android.widget.Toast;
-
 import com.getbase.floatingactionbutton.AddFloatingActionButton;
-import com.getbase.floatingactionbutton.FloatingActionButton;
-import com.getbase.floatingactionbutton.FloatingActionsMenu;
-
 import edu.wpi.cs403x.dyvo.api.DyvoServer;
 import edu.wpi.cs403x.dyvo.api.DyvoServerAction;
 import edu.wpi.cs403x.dyvo.db.VobsDbAdapter;
