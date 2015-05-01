@@ -36,6 +36,8 @@ public class MainActivity extends ActionBarActivity
      */
     private CharSequence mTitle;
 
+    private int currentPosition;
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -84,6 +86,7 @@ public class MainActivity extends ActionBarActivity
         // update the main content by replacing fragments
         FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment newFragment;
+        currentPosition = position;
         switch (position) {
             case 0:
                 // My VOBs section
@@ -145,11 +148,16 @@ public class MainActivity extends ActionBarActivity
         switch (id){
             case R.id.action_logout:
                 Intent intent = new Intent(MainActivity.this, FacebookLoginActivity.class);
-
                 LoginManager.getInstance().logOut();
                 startActivity(intent);
                 break;
             case R.id.action_settings:
+                break;
+            case R.id.action_map_view:
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                Fragment newFragment;
+                newFragment = VobsMapView.newInstance(currentPosition + 1);
+                fragmentManager.beginTransaction().replace(R.id.container, newFragment).commit();
                 break;
             default:
                 break;

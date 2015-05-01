@@ -32,4 +32,5 @@
     <string name="default_content">Content</string>
     <string name="vob_detail_center_on_vob_text">Center on VOB</string>
     <string name="action_logout">log out</string>
+    <string name="action_map_view">map</string>
 </resources>

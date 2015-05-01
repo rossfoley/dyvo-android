@@ -2,9 +2,11 @@ package edu.wpi.cs403x.dyvo;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.location.Location;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,6 +15,11 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -31,6 +38,8 @@ public class CreateVobActivity extends ActionBarActivity {
     private SharedPreferences settings;
     private VobsDbAdapter dbHelper;
     private VobViewCursorAdapter adapter;
+    private MapFragment mapFragment;
+    private GoogleMap googleMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +64,14 @@ public class CreateVobActivity extends ActionBarActivity {
 
         // Initialize TextView
         textView = (TextView) findViewById(R.id.create_vob_text_content);
+
+        // Map Stuff
+        mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.vob_create_map);
+        googleMap = mapFragment.getMap();
+        Location loc = LocationHelper.getInstance().getLocation();
+        LatLng latLng = new LatLng(loc.getLatitude(), loc.getLongitude());
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
+        googleMap.setMyLocationEnabled(true);
 
         // Add Action to 'Drop' button
         dropBtn = (Button) findViewById(R.id.btn_drop);
