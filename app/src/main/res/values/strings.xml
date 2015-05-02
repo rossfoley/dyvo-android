@@ -3,7 +3,6 @@
 
     <string name="title_section1">My VOBs</string>
     <string name="title_section2">Nearby VOBs</string>
-    <string name="title_section3">About</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -31,7 +30,7 @@
     <string name="default_user_name">Large Text</string>
     <string name="default_content">Content</string>
     <string name="vob_detail_center_on_vob_text">Center on VOB</string>
-    <string name="action_logout">log out</string>
-    <string name="action_map_view">map</string>
-    <string name="action_list_view">list</string>
+    <string name="action_logout">Log Out</string>
+    <string name="action_map_view">Map</string>
+    <string name="action_list_view">List</string>
 </resources>

@@ -94,7 +94,7 @@
                     android:layout_height="fill_parent"
                     android:layout_marginTop="5dp"
                     android:id="@+id/vob_detail_center_btn"
-                    android:background="#fff5cffd"/>
+                    android:background="@color/app_color"/>
 
 
             </LinearLayout>

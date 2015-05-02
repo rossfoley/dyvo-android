@@ -22,7 +22,7 @@
         android:layout_gravity="bottom|end"
         android:layout_marginEnd="5dp"
         android:layout_marginBottom="5dp"
-        fab:fab_colorNormal="@color/pink"
-        fab:fab_colorPressed="@color/pink_pressed"
+        fab:fab_colorNormal="@color/app_color"
+        fab:fab_colorPressed="@color/app_color"
         fab:fab_plusIconColor="@color/white" />
 </FrameLayout>
