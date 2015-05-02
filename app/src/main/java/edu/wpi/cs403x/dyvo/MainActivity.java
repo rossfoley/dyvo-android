@@ -3,6 +3,9 @@ package edu.wpi.cs403x.dyvo;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.drm.DrmStore;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -22,6 +25,7 @@ import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginManager;
 
 import edu.wpi.cs403x.dyvo.api.LocationHelper;
+import edu.wpi.cs403x.dyvo.db.VobsDbAdapter;
 
 public class MainActivity extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
@@ -37,6 +41,23 @@ public class MainActivity extends ActionBarActivity
     private CharSequence mTitle;
 
     private int currentPosition;
+
+    private boolean isMapView = false;
+
+    private SharedPreferences settings;
+
+    private VobsMapView.GetCursorFunction getMyVobFunction = new VobsMapView.GetCursorFunction() {
+        @Override
+        public Cursor getCursor(VobsDbAdapter dbHelper) {
+            return dbHelper.fetchVobsByUser(settings.getString("uid", ""));
+        }
+    };
+    private VobsMapView.GetCursorFunction getNearVobsFunction = new VobsMapView.GetCursorFunction() {
+        @Override
+        public Cursor getCursor(VobsDbAdapter dbHelper) {
+            return dbHelper.fetchNearbyVobs();
+        }
+    };
 
     @Override
     protected void onResume() {
@@ -68,6 +89,9 @@ public class MainActivity extends ActionBarActivity
         //Initialize helper singletons
         LocationHelper.getInstance().initialize(this);
 
+        // Initialize the settings
+        settings = getSharedPreferences(FacebookLoginActivity.PREFS_NAME, Context.MODE_PRIVATE);
+
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
         mTitle = getTitle();
@@ -87,6 +111,8 @@ public class MainActivity extends ActionBarActivity
         FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment newFragment;
         currentPosition = position;
+        isMapView = false;
+        invalidateOptionsMenu();
         switch (position) {
             case 0:
                 // My VOBs section
@@ -100,6 +126,7 @@ public class MainActivity extends ActionBarActivity
                 newFragment = PlaceholderFragment.newInstance(position + 1);
                 break;
         }
+
         fragmentManager.beginTransaction().replace(R.id.container, newFragment).commit();
     }
 
@@ -139,12 +166,29 @@ public class MainActivity extends ActionBarActivity
     }
 
     @Override
+    public boolean onPrepareOptionsMenu(Menu menu){
+        menu.clear();
+
+        if (isMapView){
+            menu.add(0, R.id.action_list_view, Menu.NONE, R.string.action_list_view).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        } else {
+            menu.add(0, R.id.action_map_view, Menu.NONE, R.string.action_map_view).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        }
+
+        menu.add(0, R.id.action_settings, Menu.NONE, R.string.action_settings);
+        menu.add(0, R.id.action_logout, Menu.NONE, R.string.action_logout);
+        restoreActionBar();
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        Fragment newFragment;
         switch (id){
             case R.id.action_logout:
                 Intent intent = new Intent(MainActivity.this, FacebookLoginActivity.class);
@@ -154,9 +198,21 @@ public class MainActivity extends ActionBarActivity
             case R.id.action_settings:
                 break;
             case R.id.action_map_view:
-                FragmentManager fragmentManager = getSupportFragmentManager();
-                Fragment newFragment;
-                newFragment = VobsMapView.newInstance(currentPosition + 1);
+                if (currentPosition == 0){
+                    newFragment = VobsMapView.newInstance(1, false, getMyVobFunction);
+                } else newFragment = VobsMapView.newInstance(2, true, getNearVobsFunction);
+
+                isMapView = true;
+                invalidateOptionsMenu();
+                fragmentManager.beginTransaction().replace(R.id.container, newFragment).commit();
+                break;
+            case R.id.action_list_view:
+                if (currentPosition == 0) {
+                    newFragment = MyVOBsFragment.newInstance(1);
+                } else newFragment = NearbyVOBSFragment.newInstance(2);
+
+                isMapView = false;
+                invalidateOptionsMenu();
                 fragmentManager.beginTransaction().replace(R.id.container, newFragment).commit();
                 break;
             default:

@@ -5,10 +5,7 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context="edu.wpi.cs403x.dyvo.VOBDetailActivity">
-    <ScrollView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:visibility="visible">
+
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="fill_parent"
@@ -87,23 +84,19 @@
                 <fragment xmlns:android="http://schemas.android.com/apk/res/android"
                     android:id="@+id/vob_detail_map"
                     android:layout_width="fill_parent"
-                    android:layout_height="300dp"
+                    android:layout_height="wrap_content"
                     android:name="com.google.android.gms.maps.MapFragment"
                     android:layout_weight="0.88" />
 
                 <Button
                     android:text="@string/vob_detail_center_on_vob_text"
                     android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="fill_parent"
                     android:layout_marginTop="5dp"
                     android:id="@+id/vob_detail_center_btn"
                     android:background="#fff5cffd"/>
 
 
             </LinearLayout>
-
-
-
         </LinearLayout>
-    </ScrollView>
 </RelativeLayout>
