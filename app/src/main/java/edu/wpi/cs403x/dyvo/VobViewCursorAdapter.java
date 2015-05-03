@@ -84,21 +84,22 @@ public class VobViewCursorAdapter extends CursorAdapter {
     }
 
     private String getTimeDisplay(String timeStr){
+        if (timeStr != null) {
+            DateFormat parser = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+            DateFormat formatter = new SimpleDateFormat("M/d/yy' - 'h:mm a");
+            try {
+                Date d = parser.parse(timeStr);
+                int offset = TimeZone.getDefault().getOffset(new Date().getTime());
+                d.setTime(d.getTime() + offset);
 
-        DateFormat parser = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-        DateFormat formatter = new SimpleDateFormat("M/d/yy' - 'h:mm a");
-        try {
-            Date d = parser.parse(timeStr);
-            int offset = TimeZone.getDefault().getOffset(new Date().getTime());
-            d.setTime(d.getTime() + offset);
-
-            String output = formatter.format(d);
-            timeStr = output;
-        } catch (ParseException e){
-            e.printStackTrace();
+                String output = formatter.format(d);
+                timeStr = output;
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            return timeStr;
+        } else {
+            return "";
         }
-        return timeStr;
     }
-
-
 }
